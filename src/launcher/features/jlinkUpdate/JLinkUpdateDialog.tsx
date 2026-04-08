@@ -42,9 +42,9 @@ export default () => {
                 .catch(error => {
                     dispatch(
                         ErrorDialogActions.showDialog(
-                            `Unable to update SEGGER J-Link: ${describeError(
-                                error,
-                            )}`,
+                            'Unable to update SEGGER J-Link',
+                            undefined,
+                            describeError(error),
                         ),
                     );
                     dispatch(reset());
