@@ -9,6 +9,12 @@ release the new version.
 
 ## Unreleased
 
+### Changed
+
+-   #1153: Enable signature verification on Windows again.
+
+## Unreleased
+
 ### Added
 
 - #1162: Update bundled J-Link to V9.24a.
