@@ -25,12 +25,6 @@ jobs:
                       exit 1
                   fi
 
-                  # Check if GitHub release already exists
-                  if ! gh release view "$TAG" --repo nordicsemi/pc-nrfconnect-launcher >/dev/null 2>&1; then
-                      echo "::error::Not running because there is no GitHub release with the tag $TAG prepared yet"
-                      exit 1
-                  fi
-
                   # Check if Artifactory release already exists
                   ARTIFACTORY_URL="https://files.nordicsemi.com/artifactory/swtools/external/ncd/launcher/$TAG"
                   if curl --head --fail "$ARTIFACTORY_URL" >/dev/null 2>&1; then

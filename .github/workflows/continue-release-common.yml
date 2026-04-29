@@ -55,20 +55,6 @@ jobs:
               run: |
                   gh release download "$TAG" --dir "$TAG" --repo nordicsemi/pc-nrfconnect-launcher
 
-            - name: Update the Windows checksum
-              env:
-                  GH_TOKEN: ${{ github.token }}
-              run: |
-                  export NEW_CHECKSUM="$(openssl dgst -sha512 -binary "$TAG"/nrfconnect-setup-*-x64.exe | openssl base64 -A)"
-                  yq '(.files[].sha512, .sha512) = strenv(NEW_CHECKSUM)' -i "$TAG/$CHANNEL.yml"
-                  gh release upload "$TAG" "$TAG/$CHANNEL.yml" --clobber --repo nordicsemi/pc-nrfconnect-launcher
-
-            - name: Publish GitHub Release
-              env:
-                  GH_TOKEN: ${{ github.token }}
-              run: |
-                  gh release edit "$TAG" --draft=false --repo nordicsemi/pc-nrfconnect-launcher
-
             - name: Generate top level yml files
               run: |
                   for yaml_file in */"$CHANNEL"*.yml; do
