@@ -14,7 +14,9 @@ import { hideDropZone, showDropZone } from './localAppInstallSlice';
 
 import styles from './dropZoneInfo.module.scss';
 
-const DropZoneForLocalApps: React.FC = ({ children }) => {
+const DropZoneForLocalApps: React.FC<React.PropsWithChildren> = ({
+    children,
+}) => {
     const dispatch = useLauncherDispatch();
     const enterCounter = useRef(0);
 

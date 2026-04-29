@@ -7,7 +7,14 @@
 import React from 'react';
 import { classNames } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
-const Row: React.FC<{ className?: string; noGutters?: boolean }> = ({
+interface RowProps extends Pick<
+    React.ComponentPropsWithRef<'div'>,
+    'ref' | 'className'
+> {
+    noGutters?: boolean;
+}
+
+const Row: React.FC<React.PropsWithChildren<RowProps>> = ({
     children,
     className,
     noGutters,

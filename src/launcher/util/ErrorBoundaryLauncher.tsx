@@ -14,7 +14,9 @@ import {
 import pkgJson from '../../../package.json';
 import { resetStore } from '../../common/persistedStore';
 
-const ErrorBoundaryLauncher: React.FC = ({ children }) => {
+const ErrorBoundaryLauncher: React.FC<React.PropsWithChildren> = ({
+    children,
+}) => {
     const restoreDefaults = () => {
         resetStore();
         getCurrentWindow().reload();

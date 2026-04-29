@@ -7,14 +7,22 @@
 import React from 'react';
 import { classNames } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
-const WithScrollbarContainer: React.FC<{
+interface WithScrollbarContainerProps extends Pick<
+    React.ComponentPropsWithRef<'div'>,
+    'ref' | 'className'
+> {
     hasFilter?: boolean;
-}> = ({ children, hasFilter = false }) => (
+}
+
+const WithScrollbarContainer: React.FC<
+    React.PropsWithChildren<WithScrollbarContainerProps>
+> = ({ children, hasFilter = false, ...attrs }) => (
     <div
         className={classNames(
             'with-scrollbar',
             hasFilter && 'filter-adjusted-height',
         )}
+        {...attrs}
     >
         <div className="content-container">{children}</div>
     </div>

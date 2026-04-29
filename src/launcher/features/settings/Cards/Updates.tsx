@@ -5,13 +5,16 @@
  */
 
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import { colors, Toggle } from '@nordicsemiconductor/pc-nrfconnect-shared';
+import {
+    Button,
+    Card,
+    colors,
+    Toggle,
+} from '@nordicsemiconductor/pc-nrfconnect-shared';
 import formatDate from 'date-fns/format';
 
 import { useLauncherDispatch, useLauncherSelector } from '../../../util/hooks';
 import { getUpdateCheckStatus } from '../../apps/appsSlice';
-import Card from '../../layout/Card';
 import { startUpdateProcess } from '../../process/updateProcess';
 import {
     getShouldCheckForUpdatesAtStartup,
@@ -20,7 +23,7 @@ import {
 
 const { white } = colors;
 
-export default () => {
+const Updates: React.FC = () => {
     const dispatch = useLauncherDispatch();
 
     const shouldCheckForUpdatesAtStartup = useLauncherSelector(
@@ -30,40 +33,48 @@ export default () => {
     const { isCheckingForUpdates, lastUpdateCheckDate } =
         useLauncherSelector(getUpdateCheckStatus);
 
-    const updateButton = (
-        <Button
-            variant="outline-primary"
-            onClick={() => dispatch(startUpdateProcess(true))}
-            disabled={isCheckingForUpdates}
-        >
-            {isCheckingForUpdates ? 'Checking...' : 'Check for updates'}
-        </Button>
-    );
-
     return (
-        <Card title="Updates" titleButton={updateButton}>
-            <p className="small text-muted">
-                {lastUpdateCheckDate != null && (
-                    <>
-                        Last update check performed:{' '}
-                        {formatDate(lastUpdateCheckDate, 'yyyy-MM-dd HH:mm:ss')}
-                    </>
-                )}
-            </p>
-            <Toggle
-                id="checkForUpdates"
-                label="Check for updates at startup"
-                onToggle={() =>
-                    dispatch(
-                        setCheckForUpdatesAtStartup(
-                            !shouldCheckForUpdatesAtStartup,
-                        ),
-                    )
-                }
-                isToggled={shouldCheckForUpdatesAtStartup}
-                variant="primary"
-                handleColor={white}
-            />
+        <Card>
+            <Card.Header className="tw-flex tw-flex-row tw-items-center tw-justify-between">
+                <Card.Header.Title cardTitle="Updates" className="tw-text-xl" />
+                <Button
+                    variant="primary-outline"
+                    size="xl"
+                    onClick={() => dispatch(startUpdateProcess(true))}
+                    disabled={isCheckingForUpdates}
+                >
+                    {isCheckingForUpdates ? 'Checking…' : 'Check for updates'}
+                </Button>
+            </Card.Header>
+            <Card.Body className="tw-gap-4">
+                <p className="small text-muted">
+                    {lastUpdateCheckDate && (
+                        <>
+                            Last update check performed:{' '}
+                            {formatDate(
+                                lastUpdateCheckDate,
+                                'yyyy-MM-dd HH:mm:ss',
+                            )}
+                        </>
+                    )}
+                </p>
+                <Toggle
+                    id="checkForUpdates"
+                    label="Check for updates at startup"
+                    onToggle={() =>
+                        dispatch(
+                            setCheckForUpdatesAtStartup(
+                                !shouldCheckForUpdatesAtStartup,
+                            ),
+                        )
+                    }
+                    isToggled={shouldCheckForUpdatesAtStartup}
+                    variant="primary"
+                    handleColor={white}
+                />
+            </Card.Body>
         </Card>
     );
 };
+
+export default Updates;

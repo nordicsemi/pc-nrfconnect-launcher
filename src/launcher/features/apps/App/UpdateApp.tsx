@@ -5,26 +5,37 @@
  */
 
 import React from 'react';
-import Button from 'react-bootstrap/Button';
+import { Button } from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 import { isUpdatable } from '../../../../ipc/apps';
 import { useLauncherDispatch } from '../../../util/hooks';
 import { show as showReleaseNotes } from '../../releaseNotes/releaseNotesDialogSlice';
 import { type DisplayedApp, isInProgress } from '../appsSlice';
 
-const UpdateApp: React.FC<{ app: DisplayedApp }> = ({ app }) => {
+type PickedUpdateAppProps = 'ref' | 'className';
+
+interface UpdateAppProps extends Pick<
+    React.ComponentPropsWithRef<'button'>,
+    PickedUpdateAppProps
+> {
+    app: DisplayedApp;
+}
+
+const UpdateApp: React.FC<UpdateAppProps> = ({ app, ...attrs }) => {
     const dispatch = useLauncherDispatch();
 
     if (!isUpdatable(app)) return null;
 
     return (
         <Button
-            variant="outline-primary"
+            variant="primary-outline"
+            size="xl"
             title={`Update ${app.displayName}`}
             disabled={isInProgress(app)}
             onClick={() => dispatch(showReleaseNotes(app))}
+            {...attrs}
         >
-            {app.progress.isUpdating ? 'Updating...' : 'Update'}
+            {app.progress.isUpdating ? 'Updating…' : 'Update'}
         </Button>
     );
 };

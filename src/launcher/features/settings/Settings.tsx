@@ -20,7 +20,7 @@ import UpdateCheckCompleteDialog from './UpdateCheckCompleteDialog';
 
 export default () => (
     <WithScrollbarContainer>
-        <div className="settings-pane-container">
+        <div className="settings-pane-container tw-flex tw-flex-col tw-gap-4">
             <Updates />
             <AppSources />
             <Authentication />

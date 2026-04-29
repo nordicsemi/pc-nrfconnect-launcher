@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import 'regenerator-runtime/runtime';
 import './module-loader';
 
 import React from 'react';

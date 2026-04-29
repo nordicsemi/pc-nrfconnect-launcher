@@ -109,9 +109,9 @@ const App = ({ app }: { app: DisplayedApp }) => {
                     className="tw-my-4 tw-ml-auto tw-flex tw-items-center tw-pr-0"
                 >
                     <ButtonToolbar className="wide-btns">
-                        <UpdateApp app={app} />
-                        <OpenApp app={app} />
-                        <InstallApp app={app} />
+                        <UpdateApp app={app} className="tw-min-w-20" />
+                        <OpenApp app={app} className="tw-min-w-20" />
+                        <InstallApp app={app} className="tw-min-w-20" />
                         <DropdownButton
                             variant={
                                 isInstalled(app)
@@ -119,7 +119,6 @@ const App = ({ app }: { app: DisplayedApp }) => {
                                     : 'outline-secondary'
                             }
                             title=""
-                            alignRight
                         >
                             <OpenHomepage app={app} />
                             <ShowReleaseNotes app={app} />

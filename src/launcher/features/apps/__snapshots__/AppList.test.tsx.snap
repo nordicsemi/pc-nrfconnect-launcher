@@ -56,12 +56,12 @@ exports[`AppList should disable buttons and display "Installing..." button text 
                 role="toolbar"
               >
                 <button
-                  class="btn btn-outline-secondary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700 active:enabled:tw-bg-gray-50 tw-min-w-20"
                   disabled=""
                   title="Install Uninstalled Uninstalled Test App"
                   type="button"
                 >
-                  Installing...
+                  Installing…
                 </button>
                 <div
                   class="dropdown"
@@ -155,15 +155,15 @@ exports[`AppList should disable buttons and display "Updating..." while updating
                 role="toolbar"
               >
                 <button
-                  class="btn btn-outline-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-nordicBlue-50 tw-min-w-20"
                   disabled=""
                   title="Update Downloadable Updatable Test App"
                   type="button"
                 >
-                  Updating...
+                  Updating…
                 </button>
                 <button
-                  class="btn btn-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700 tw-min-w-20"
                   disabled=""
                   title="Open Downloadable Updatable Test App"
                   type="button"
@@ -259,7 +259,7 @@ exports[`AppList should disable buttons while removing an app 1`] = `
                 role="toolbar"
               >
                 <button
-                  class="btn btn-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700 tw-min-w-20"
                   disabled=""
                   title="Open Downloadable Installed Test App"
                   type="button"
@@ -388,7 +388,7 @@ exports[`AppList should render local, not-installed, installed, and updatable ap
                 role="toolbar"
               >
                 <button
-                  class="btn btn-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700 tw-min-w-20"
                   title="Open Downloadable Installed Test App"
                   type="button"
                 >
@@ -457,14 +457,14 @@ exports[`AppList should render local, not-installed, installed, and updatable ap
                 role="toolbar"
               >
                 <button
-                  class="btn btn-outline-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-nordicBlue tw-bg-white tw-text-nordicBlue active:enabled:tw-bg-nordicBlue-50 tw-min-w-20"
                   title="Update Downloadable Updatable Test App"
                   type="button"
                 >
                   Update
                 </button>
                 <button
-                  class="btn btn-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700 tw-min-w-20"
                   title="Open Downloadable Updatable Test App"
                   type="button"
                 >
@@ -530,7 +530,7 @@ exports[`AppList should render local, not-installed, installed, and updatable ap
                 role="toolbar"
               >
                 <button
-                  class="btn btn-primary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-transparent tw-bg-nordicBlue tw-text-white active:enabled:tw-bg-nordicBlue-700 tw-min-w-20"
                   title="Open Local Dummy Test App"
                   type="button"
                 >
@@ -596,7 +596,7 @@ exports[`AppList should render local, not-installed, installed, and updatable ap
                 role="toolbar"
               >
                 <button
-                  class="btn btn-outline-secondary"
+                  class="tw-preflight tw-h-8 tw-px-4 tw-text-base tw-border tw-border-gray-700 tw-bg-white tw-text-gray-700 active:enabled:tw-bg-gray-50 tw-min-w-20"
                   title="Install Uninstalled Uninstalled Test App"
                   type="button"
                 >

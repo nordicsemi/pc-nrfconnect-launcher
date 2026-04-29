@@ -5,11 +5,14 @@
  */
 
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import { colors, Toggle } from '@nordicsemiconductor/pc-nrfconnect-shared';
+import {
+    Button,
+    Card,
+    colors,
+    Toggle,
+} from '@nordicsemiconductor/pc-nrfconnect-shared';
 
 import { useLauncherDispatch, useLauncherSelector } from '../../../util/hooks';
-import Card from '../../layout/Card';
 import Col from '../../layout/Col';
 import Row from '../../layout/Row';
 import { toggleSendingTelemetry } from '../../telemetry/telemetryEffects';
@@ -20,33 +23,44 @@ import {
 
 const { white } = colors;
 
-export default () => {
+const UsageStatistics: React.FC = () => {
     const dispatch = useLauncherDispatch();
 
     const isSendingTelemetry = useLauncherSelector(getIsSendingTelemetry);
 
     return (
-        <Card title="Usage statistics">
-            <Row>
-                <Col>
-                    <Toggle
-                        id="checkForShare"
-                        label="Collect anonymous usage data"
-                        onToggle={() => dispatch(toggleSendingTelemetry())}
-                        isToggled={isSendingTelemetry}
-                        variant="primary"
-                        handleColor={white}
-                    />
-                </Col>
-                <Col fixedSize>
-                    <Button
-                        variant="outline-primary"
-                        onClick={() => dispatch(showTelemetryDialog())}
-                    >
-                        Show agreement
-                    </Button>
-                </Col>
-            </Row>
+        <Card>
+            <Card.Header>
+                <Card.Header.Title
+                    cardTitle="Usage statistics"
+                    className="tw-text-xl"
+                />
+            </Card.Header>
+            <Card.Body>
+                <Row noGutters className="tw-items-center">
+                    <Col noPadding>
+                        <Toggle
+                            id="checkForShare"
+                            label="Collect anonymous usage data"
+                            onToggle={() => dispatch(toggleSendingTelemetry())}
+                            isToggled={isSendingTelemetry}
+                            variant="primary"
+                            handleColor={white}
+                        />
+                    </Col>
+                    <Col noPadding fixedSize>
+                        <Button
+                            variant="primary-outline"
+                            size="xl"
+                            onClick={() => dispatch(showTelemetryDialog())}
+                        >
+                            Show agreement
+                        </Button>
+                    </Col>
+                </Row>
+            </Card.Body>
         </Card>
     );
 };
+
+export default UsageStatistics;

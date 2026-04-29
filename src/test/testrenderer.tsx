@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Provider } from 'react-redux';
+import { Provider, type ProviderProps } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { render } from '@testing-library/react';
 import { type Action } from 'redux';
@@ -25,9 +25,10 @@ export const preparedStore = (actions: Action[] = []) => {
     return store;
 };
 
-const preparedProvider = (store: Store) => (props: object) => (
-    <Provider store={store} {...props} />
-);
+const preparedProvider =
+    (store: Store) => (props: Omit<ProviderProps, 'store'>) => (
+        <Provider store={store} {...props} />
+    );
 
 export default (
     element: React.ReactElement,
