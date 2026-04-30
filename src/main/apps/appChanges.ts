@@ -7,7 +7,7 @@
 import { createDisposableTempDir } from '@nordicsemiconductor/pc-nrfconnect-shared/main';
 import { dialog } from 'electron';
 import fs from 'fs';
-import moveFile from 'move-file';
+import { moveFile } from 'move-file';
 import path from 'path';
 import shasum from 'shasum';
 
@@ -50,7 +50,7 @@ const extractNpmPackage = async (
     const appDir = path.join(tempDir.path, appName);
 
     await untar(tgzFile, appDir, 1);
-    await moveFile(appDir, destinationDir);
+    await moveFile(appDir, destinationDir, { overwrite: true });
 };
 
 /*
@@ -203,7 +203,9 @@ export const removeDownloadableApp = async (app: AppSpec) => {
     removeInstallMetaData(app);
 
     using tempDir = createDisposableTempDir();
-    await moveFile(appPath, path.join(tempDir.path, 'to-be-deleted'));
+    await moveFile(appPath, path.join(tempDir.path, 'to-be-deleted'), {
+        overwrite: true,
+    });
 };
 
 const verifyShasum = (filePath: string, expectedShasum?: string) => {

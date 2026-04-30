@@ -10,5 +10,8 @@ const sharedConfig =
     ]);
 
 sharedConfig.setupFilesAfterEnv.push('<rootDir>/src/test/setupMocks.js');
+sharedConfig.transformIgnorePatterns = [
+    'node_modules/(?!(@nordicsemiconductor/pc-nrfconnect-shared|move-file)/)',
+];
 
 module.exports = sharedConfig;

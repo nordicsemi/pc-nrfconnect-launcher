@@ -131,7 +131,7 @@
         "electron-updater": "4.3.7",
         "lodash": "^4.17.21",
         "minimist": "^1.2.8",
-        "move-file": "^2.1.0",
+        "move-file": "^4.1.0",
         "mustache": "4.0.1",
         "node-watch": "^0.7.3",
         "serialport": "10.5.0",
