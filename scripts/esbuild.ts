@@ -18,7 +18,10 @@ const options = {
     bundle: true,
     color: true,
     entryPoints: ['src/main/index.ts'],
-    external: ['electron', ...Object.keys(dependencies ?? {}).filter(d => d !== 'move-file')],
+    external: [
+        'electron',
+        ...Object.keys(dependencies ?? {}).filter(d => d !== 'move-file'),
+    ],
     logLevel: 'info',
     outfile: 'dist/main.js',
     platform: 'node',
