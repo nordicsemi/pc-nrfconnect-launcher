@@ -7,7 +7,7 @@
 import { createDisposableTempDir } from '@nordicsemiconductor/pc-nrfconnect-shared/main';
 import { dialog } from 'electron';
 import fs from 'fs';
-import moveFile from 'move-file';
+import { moveFile } from 'move-file';
 import path from 'path';
 import shasum from 'shasum';
 

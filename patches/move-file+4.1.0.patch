@@ -1,0 +1,22 @@
+diff --git a/node_modules/move-file/index.js b/node_modules/move-file/index.js
+index 9e92831..e1b492e 100644
+--- a/node_modules/move-file/index.js
++++ b/node_modules/move-file/index.js
+@@ -45,7 +45,7 @@ const _moveFile = async (sourcePath, destinationPath, {overwrite = true, cwd = p
+ 	try {
+ 		await fsPromises.rename(sourcePath, destinationPath);
+ 	} catch (error) {
+-		if (error.code === 'EXDEV') {
++        if (error.code === 'EXDEV' || (error.code === 'EPERM' && error.syscall === 'rename')) {
+ 			const stats = await fsPromises.lstat(sourcePath);
+ 			if (stats.isSymbolicLink()) {
+ 				const target = await fsPromises.readlink(sourcePath);
+@@ -82,7 +82,7 @@ const _moveFileSync = (sourcePath, destinationPath, {overwrite = true, cwd = pro
+ 	try {
+ 		fs.renameSync(sourcePath, destinationPath);
+ 	} catch (error) {
+-		if (error.code === 'EXDEV') {
++        if (error.code === 'EXDEV' || (error.code === 'EPERM' && error.syscall === 'rename')) {
+ 			const stats = fs.lstatSync(sourcePath);
+ 			if (stats.isSymbolicLink()) {
+ 				const target = fs.readlinkSync(sourcePath);
