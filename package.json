@@ -31,7 +31,7 @@
         "pack": "npm run build:prod && electron-builder -p never",
         "install-devtools": "electron . --install-devtools",
         "remove-devtools": "electron . --remove-devtools",
-        "postinstall": "node scripts/getNrfutil.js"
+        "postinstall": "patch-package && node scripts/getNrfutil.js"
     },
     "author": "Nordic Semiconductor ASA",
     "license": "SEE LICENSE IN LICENSE",
@@ -134,6 +134,7 @@
         "move-file": "^4.1.0",
         "mustache": "4.0.1",
         "node-watch": "^0.7.3",
+        "patch-package": "^8.0.1",
         "serialport": "10.5.0",
         "shasum": "1.0.2",
         "short-uuid": "4.2.0",
