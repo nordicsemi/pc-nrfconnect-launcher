@@ -27,6 +27,8 @@ jest.mock('./../main/log.ts', () => ({
     },
 }));
 
+jest.mock('move-file', () => ({ moveFile: jest.fn() }));
+
 jest.mock('@electron/remote', () => ({
     require: jest.fn(),
     app: {
