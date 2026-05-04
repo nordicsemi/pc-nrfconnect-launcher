@@ -1,3 +1,10 @@
+## 5.3.1 - 2026-05-05
+
+### Fixed
+
+- Installing apps on Ubuntu 26.
+- Drag-n-Drop install of local apps on Windows.
+
 ## 5.3.0 - 2026-04-29
 
 ### Added
