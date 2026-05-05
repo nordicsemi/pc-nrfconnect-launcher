@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
         inputs:
             tag:
-                description: Tag of the release to continue.
+                description: Tag of the release to continue. Format is vX.X.X
                 type: string
                 required: true
 
