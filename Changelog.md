@@ -2,8 +2,8 @@
 
 ### Fixed
 
-- Installing apps on Ubuntu 26.
-- Drag-n-Drop install of local apps on Windows.
+- Issues with installation of local apps on Windows using drag and drop.
+- Issues with installation of apps on Ubuntu 26.04 LTS.
 
 ## 5.3.0 - 2026-04-29
 
