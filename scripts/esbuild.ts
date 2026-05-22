@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { cyclonedxEsbuildPlugin } from '@cyclonedx/cyclonedx-esbuild';
 import { node as nodeVersion } from '@nordicsemiconductor/pc-nrfconnect-shared/scripts/versions';
 import esbuild, { type BuildOptions } from 'esbuild';
 import * as fs from 'node:fs';
@@ -38,6 +39,7 @@ const options = {
     },
     minify: process.argv.includes('--prod'),
     target: [`node${nodeVersion}`],
+    plugins: [cyclonedxEsbuildPlugin({ outputFile: 'bom.json' })],
 } satisfies BuildOptions;
 
 const build = async () => {
