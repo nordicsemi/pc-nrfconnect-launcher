@@ -39,7 +39,7 @@ const options = {
     },
     minify: process.argv.includes('--prod'),
     target: [`node${nodeVersion}`],
-    plugins: [cyclonedxEsbuildPlugin({ outputFile: 'bom.json' })],
+    plugins: [cyclonedxEsbuildPlugin({ outputFile: 'sbom.json' })],
 } satisfies BuildOptions;
 
 const build = async () => {
