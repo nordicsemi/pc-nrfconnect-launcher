@@ -2,6 +2,9 @@ tool:
 - name: nRF Connect for Desktop launcher
   link: true
 sections:
+- name: June 2026
+  entries:
+  - "Updated the [Supported operating systems](./os_support.md) page: added Linux - Debian 12 as Tier 1."
 - name: May 2026
   entries:
   - "Updated the [Supported operating systems](./os_support.md) page: Linux - Ubuntu 24.04 LTS is now Tier 1, Linux - Ubuntu 22.04 LTS is now Tier 2."
