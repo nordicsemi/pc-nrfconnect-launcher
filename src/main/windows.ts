@@ -12,6 +12,7 @@ import {
 import {
     app as electronApp,
     BrowserWindow,
+    MessageChannelMain,
     screen,
     type WebContents,
 } from 'electron';
@@ -171,22 +172,49 @@ const getSizeOptions = (app: LaunchableApp) => {
     };
 };
 
-export const openAppWindow = (app: LaunchableApp, args: string[]) => {
-    const template = app.html
-        ? `file://${join(
-              app.installed.path,
-              app.html,
-          )}?launcherPath=${encodeURIComponent(electronApp.getAppPath())}`
-        : `file://${getBundledResourcePath()}/app.html?appPath=${encodeURIComponent(
-              app.installed.path,
-          )}`;
+const getAppUrl = (app: LaunchableApp) => {
+    // webHtml takes precedence over html: It is a web URL which is loaded
+    // in a sandboxed browser window without node integration, instead of
+    // loading any UI from the app itself.
+    if (app.html != null) {
+        return `file://${join(
+            app.installed.path,
+            app.html,
+        )}?launcherPath=${encodeURIComponent(electronApp.getAppPath())}`;
+    }
 
+    return `file://${getBundledResourcePath()}/app.html?appPath=${encodeURIComponent(
+        app.installed.path,
+    )}`;
+};
+
+const getWebPreferences = (app: LaunchableApp) => {
+    if (app.webHtml == null) {
+        return undefined;
+    }
+
+    return {
+        nodeIntegration: false,
+        contextIsolation: true,
+        sandbox: true,
+        preload:
+            app.preloadScript == null
+                ? undefined
+                : join(app.installed.path, app.preloadScript),
+    };
+};
+
+export const openAppWindow = (app: LaunchableApp, args: string[]) => {
+    console.log(`Opening app ${app.name} with arguments: ${args.join(' ')}`);
+    console.log(app);
     const appWindow = createWindow(
         {
             title: `${app.displayName || app.name} v${app.currentVersion}`,
-            url: template,
+            url: getAppUrl(app),
             icon: getAppIcon(app),
-            show: true,
+            // show: true,
+            show: app.webHtml == null,
+            skipTaskbar: app.webHtml != null,
             backgroundColor: '#fff',
             ...getSizeOptions(app),
         },
@@ -242,6 +270,31 @@ export const openAppWindow = (app: LaunchableApp, args: string[]) => {
     appWindow.on('restart-cancelled', () => {
         reloading = false;
     });
+
+    if (app.webHtml == null) {
+        return;
+    }
+    const webWindow = createWindow(
+        {
+            title: `${app.displayName || app.name} v${app.currentVersion}`,
+            url: app.webHtml,
+            icon: getAppIcon(app),
+            show: true,
+            backgroundColor: '#fff',
+            webPreferences: getWebPreferences(app),
+            ...getSizeOptions(app),
+        },
+        args,
+    );
+
+    const { port1, port2 } = new MessageChannelMain();
+
+    webWindow.webContents.on('did-finish-load', () =>
+        webWindow.webContents.postMessage('app-backend-port', null, [port1]),
+    );
+    appWindow.webContents.on('did-finish-load', () =>
+        appWindow.webContents.postMessage('app-backend-port', null, [port2]),
+    );
 };
 
 export const openApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => {

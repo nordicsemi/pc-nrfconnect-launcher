@@ -48,16 +48,17 @@ export const createWindow = (
     args = appArguments(),
 ) => {
     const mergedOptions: BrowserWindowOptions = {
-        show: false,
+        show: true,
         autoHideMenuBar: true,
+        ...options,
         webPreferences: {
             nodeIntegration: true,
             sandbox: false,
             contextIsolation: false,
             additionalArguments: args.length === 0 ? [] : ['--', ...args],
             backgroundThrottling: false,
+            ...options.webPreferences,
         },
-        ...options,
     };
     const browserWindow = new BrowserWindow(mergedOptions);
 
@@ -82,12 +83,20 @@ export const createWindow = (
     });
 
     browserWindow.once('ready-to-show', () => {
-        browserWindow.show();
+        if (mergedOptions.show !== false) {
+            browserWindow.show();
+        }
+        // browserWindow.show();
         if (splashScreen && !splashScreen.isDestroyed()) {
             splashScreen.close();
         }
     });
 
-    enable(browserWindow.webContents);
+    // @electron/remote is only usable (and only safe to expose) in
+    // unsandboxed windows with node integration, i.e. legacy app windows.
+    if (!mergedOptions.webPreferences?.sandbox) {
+        enable(browserWindow.webContents);
+    }
+
     return browserWindow;
 };
