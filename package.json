@@ -22,13 +22,14 @@
         "build:prod": "run-p --silent --continue-on-error --print-label build:prod:*",
         "build:prod:renderer": "tsx scripts/esbuild-renderer --prod",
         "build:prod:main": "tsx scripts/esbuild --prod",
+        "build:sbom": "cyclonedx-npm --output-format JSON --output-file dist/sbom.json -- package.json",
         "check": "run-p --silent --continue-on-error --print-label check:*",
         "check:lint": "eslint --color .",
         "check:types": "check-for-typescript tsc --noEmit --pretty",
         "check:license": "nrfconnect-license check",
         "test": "jest src",
         "test-e2e": "xvfb-maybe npx playwright test test-e2e/",
-        "pack": "npm run build:prod && electron-builder -p never",
+        "pack": "npm run build:prod && npm run build:sbom && electron-builder -p never",
         "install-devtools": "electron . --install-devtools",
         "remove-devtools": "electron . --remove-devtools",
         "postinstall": "patch-package && node scripts/getNrfutil.js"
@@ -104,7 +105,7 @@
         }
     },
     "devDependencies": {
-        "@cyclonedx/cyclonedx-esbuild": "^1.3.1",
+        "@cyclonedx/cyclonedx-npm": "^4.2.1",
         "@electron/notarize": "^2.2.0",
         "@nordicsemiconductor/nrf-jlink-js": "^1.0.0",
         "@nordicsemiconductor/pc-nrfconnect-shared": "^244.0.0",
