@@ -1,3 +1,9 @@
+## 5.3.2 - Unreleased
+
+### Fixed
+
+- Broken link for the **Open Documentation** button.
+
 ## 5.3.1 - 2026-05-05
 
 ### Fixed
