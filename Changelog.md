@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Broken link for the **Open Documentation** button.
+- Several broken documentation links in different areas of the app.
 
 ## 5.3.1 - 2026-05-05
 
