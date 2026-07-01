@@ -53,9 +53,15 @@ export const openLauncherWindow = () => {
         }
         launcherWindow.show();
         launcherWindow.focus();
-    } else {
-        launcherWindow = createLauncherWindow();
+        return Promise.resolve(launcherWindow);
     }
+
+    launcherWindow = createLauncherWindow();
+    return new Promise<BrowserWindow>(resolve => {
+        launcherWindow?.webContents.once('did-finish-load', () =>
+            resolve(launcherWindow as BrowserWindow),
+        );
+    });
 };
 
 const keepPositionWithinBounds = ({ x, y, height, width }: WindowState) => {
