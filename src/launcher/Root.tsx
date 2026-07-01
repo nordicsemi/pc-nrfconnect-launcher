@@ -16,6 +16,7 @@ import About from './features/about/About';
 import AppleSiliconAlert from './features/appleSilicon/AppleSiliconAlert';
 import AppleSiliconDialog from './features/appleSilicon/AppleSiliconDialog';
 import AppList from './features/apps/AppList';
+import OpenAppConfirmationDialog from './features/deepLink/OpenAppConfirmationDialog';
 import JLinkUpdateDialog from './features/jlinkUpdate/JLinkUpdateDialog';
 import JLinkUpdateProgressDialog from './features/jlinkUpdate/JLinkUpdateProgressDialog';
 import UpdateAvailableDialog from './features/launcherUpdate/UpdateAvailableDialog';
@@ -100,6 +101,7 @@ export default () => {
             <TelemetryDialog />
             <ProxyLoginDialog />
             <ProxyErrorDialog />
+            <OpenAppConfirmationDialog />
             <AppleSiliconDialog />
             <QuickStartDialog />
             <DeprecatedSourcesDialog />

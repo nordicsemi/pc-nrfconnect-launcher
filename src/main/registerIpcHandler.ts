@@ -27,6 +27,7 @@ import * as artifactoryToken from '../ipc/artifactoryToken';
 import * as desktopShortcut from '../ipc/createDesktopShortcut';
 import * as jlink from '../ipc/jlink';
 import * as launcherUpdate from '../ipc/launcherUpdate';
+import * as openAppConfirmation from '../ipc/openAppConfirmation';
 import * as proxyLogin from '../ipc/proxyLogin';
 import * as sources from '../ipc/sources';
 import {
@@ -45,6 +46,7 @@ import createDesktopShortcut from './apps/createDesktopShortcut';
 import { addSource, removeSource } from './apps/sources/sourceChanges';
 import { getAllSources } from './apps/sources/sources';
 import { getTokenInformation, removeToken, setToken } from './artifactoryToken';
+import { answerOpenAppConfirmation } from './deepLink/openAppConfirmation';
 import { getJLinkState, installJLink } from './jlink';
 import {
     cancelUpdate,
@@ -109,6 +111,10 @@ export default () => {
 
     proxyLogin.forRenderer.registerAnswerProxyLoginRequest(
         callRegisteredCallback,
+    );
+
+    openAppConfirmation.forRenderer.registerAnswerOpenAppConfirmation(
+        answerOpenAppConfirmation,
     );
 
     launcherUpdate.forRenderer.registerCheckForUpdate(checkForUpdate);
