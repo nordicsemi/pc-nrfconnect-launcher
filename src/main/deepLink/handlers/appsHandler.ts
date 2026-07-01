@@ -24,7 +24,7 @@ export const handleOpenAppDeepLink = async (url: URL) => {
         if (k !== 'source') args.push(`--${k}`, v);
     });
 
-    openLauncherWindow();
+    await openLauncherWindow();
 
     const confirmed = await requestOpenAppConfirmation(name, source);
     if (!confirmed) {
