@@ -48,7 +48,11 @@ const appWindows: {
 
 export const openLauncherWindow = () => {
     if (launcherWindow) {
+        if (launcherWindow.isMinimized()) {
+            launcherWindow.restore();
+        }
         launcherWindow.show();
+        launcherWindow.focus();
     } else {
         launcherWindow = createLauncherWindow();
     }

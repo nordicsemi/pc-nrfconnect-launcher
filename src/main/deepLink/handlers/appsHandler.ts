@@ -8,10 +8,10 @@ import {
     OFFICIAL,
     type SourceName,
 } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/sources';
-import { dialog } from 'electron';
 
 import { logger } from '../../log';
-import { openInstalledApp } from '../../windows';
+import { openInstalledApp, openLauncherWindow } from '../../windows';
+import { requestOpenAppConfirmation } from '../openAppConfirmation';
 
 export const handleOpenAppDeepLink = async (url: URL) => {
     const name = decodeURIComponent(
@@ -24,17 +24,10 @@ export const handleOpenAppDeepLink = async (url: URL) => {
         if (k !== 'source') args.push(`--${k}`, v);
     });
 
-    const { response } = await dialog.showMessageBox({
-        type: 'question',
-        buttons: ['Cancel', 'Open'],
-        defaultId: 1, // Enter -> Open
-        cancelId: 0, // Esc -> Cancel
-        title: 'Open application',
-        message: `Open "${name}"?`,
-        detail: `A link is requesting to open "${name}" from source "${source}".`,
-    });
+    openLauncherWindow();
 
-    if (response !== 1) {
+    const confirmed = await requestOpenAppConfirmation(name, source);
+    if (!confirmed) {
         logger.info(`User declined deep-link open of "${name}"`);
         return;
     }
