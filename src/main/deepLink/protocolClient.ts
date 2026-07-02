@@ -7,9 +7,21 @@
 import { app } from 'electron';
 import path from 'path';
 
+import { logger } from '../log';
+import { registerLinuxAppImageProtocolClient } from './registerLinuxProtocolClient';
+
 export const DEEPLINK_SCHEME = 'nrfconnectfordesktop';
 
 export const registerProtocolClient = () => {
+    if (process.platform === 'linux') {
+        // AppImage is not installed into the system, so there is no existing
+        // .desktop file for setAsDefaultProtocolClient() to update.
+        registerLinuxAppImageProtocolClient(DEEPLINK_SCHEME).catch(error =>
+            logger.warn(`Failed to register deep link handler: ${error}`),
+        );
+        return;
+    }
+
     if (process.defaultApp) {
         // dev / unpackaged
         if (process.argv.length >= 2) {
