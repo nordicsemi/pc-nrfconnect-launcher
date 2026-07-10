@@ -51,5 +51,11 @@ export const handleDeepLink = (rawUrl?: string) => {
     );
 };
 
-export const findDeepLink = (args: string[]) =>
+const findDeepLink = (args: string[]) =>
     args.find(a => a.startsWith(`${DEEPLINK_SCHEME}://`));
+
+export const containsDeepLink = (args: string[]) => findDeepLink(args) != null;
+
+export const handleDeepLinkFromArgv = (argv = process.argv) => {
+    handleDeepLink(findDeepLink(argv));
+};

@@ -15,8 +15,8 @@ import { migrateSourcesJson } from './apps/dataMigration/migrateSourcesJson';
 import { migrateSourcesVersionedJson } from './apps/dataMigration/migrateSourcesVersionedJson';
 import configureElectronApp from './configureElectronApp';
 import {
-    findDeepLink,
     handleDeepLink,
+    handleDeepLinkFromArgv,
     registerProtocolClient,
 } from './deepLink';
 import initNrfUtilProxyEnv from './initNrfUtilProxyEnv';
@@ -35,7 +35,7 @@ app.on('open-url', (event, url) => {
 });
 
 // Windows / Linux cold start (URL is in argv)
-handleDeepLink(findDeepLink(process.argv));
+handleDeepLinkFromArgv();
 
 initNrfUtilProxyEnv();
 singeInstanceLock();
