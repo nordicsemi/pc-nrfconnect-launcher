@@ -4,9 +4,5 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-export { registerProtocolClient, DEEPLINK_SCHEME } from './protocolClient';
-export {
-    containsDeepLink,
-    handleDeepLink,
-    handleDeepLinkFromArgv,
-} from './router';
+export { registerDeepLinkHandling } from './protocolClient';
+export { containsDeepLink, handleDeepLinkFromArgv } from './router';
