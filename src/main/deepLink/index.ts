@@ -5,4 +5,8 @@
  */
 
 export { registerProtocolClient, DEEPLINK_SCHEME } from './protocolClient';
-export { handleDeepLink, findDeepLink } from './router';
+export {
+    containsDeepLink,
+    handleDeepLink,
+    handleDeepLinkFromArgv,
+} from './router';
