@@ -15,21 +15,16 @@ export default () => {
         return;
     }
 
-    const isFirstInstance = app.requestSingleInstanceLock({
-        argv: JSON.stringify(argv),
-    });
+    const isFirstInstance = app.requestSingleInstanceLock(argv);
 
     if (isFirstInstance) {
         app.on(
             'second-instance',
-            (_event, argvFromSecondInstance, _wd, message) => {
+            (_event, argvFromSecondInstance, _wd, parsedArgv) => {
                 if (containsDeepLink(argvFromSecondInstance)) {
                     handleDeepLinkFromArgv(argvFromSecondInstance);
                 } else {
-                    const parsed = JSON.parse(
-                        (message as { argv: string }).argv,
-                    );
-                    openInitialWindow(parsed);
+                    openInitialWindow(parsedArgv as typeof argv);
                 }
             },
         );
