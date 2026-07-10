@@ -21,14 +21,19 @@ import storeExecutablePath from './storeExecutablePath';
 
 telemetry.enableTelemetry();
 
+// Initialise infrastructure
 registerDeepLinkHandling();
-handleDeepLinkFromArgv();
-
 initNrfUtilProxyEnv();
 singeInstanceLock();
 initializeElectronRemote();
+registerIpcHandler();
+
+// Run migrations
 migrateSourcesJson();
 migrateSourcesVersionedJson();
-registerIpcHandler();
+
+// Start app
+handleDeepLinkFromArgv();
 configureElectronApp();
+
 storeExecutablePath();
