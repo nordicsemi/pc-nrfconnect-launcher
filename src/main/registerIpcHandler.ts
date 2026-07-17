@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import * as auth from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 import {
     appDetails,
     launcherConfig,
@@ -53,6 +54,13 @@ import {
     setUseChineseUpdateServer,
     startUpdate,
 } from './launcherUpdate';
+import { startOauthLogin } from './oauth/login';
+import {
+    getAccessTokenSilently,
+    getActiveAccountInfo,
+    getProfileInfo,
+    localLogout,
+} from './oauth/session';
 import { openFile, openFileLocation, openUrl } from './open';
 import { callRegisteredCallback } from './proxyLogins';
 import {
@@ -151,4 +159,10 @@ export default () => {
 
     jlink.forRenderer.registerGetJLinkState(getJLinkState);
     jlink.forRenderer.registerInstallJLink(installJLink);
+
+    auth.forRenderer.registerStartLogin(startOauthLogin);
+    auth.forRenderer.registerLocalLogout(localLogout);
+    auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);
+    auth.forRenderer.registerGetAccountInfo(getActiveAccountInfo);
+    auth.forRenderer.registerGetProfileInfo(getProfileInfo);
 };

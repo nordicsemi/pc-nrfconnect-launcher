@@ -7,6 +7,7 @@
 import { app } from 'electron';
 
 import { logger } from '../log';
+import { completeOauthLogin } from '../oauth/login';
 import { handleOpenAppDeepLink } from './handlers/appsHandler';
 import { DEEPLINK_SCHEME } from './protocolClient';
 
@@ -16,6 +17,10 @@ const routes: { match: (u: URL) => boolean; handle: (u: URL) => unknown }[] = [
     {
         match: u => u.host === 'apps' && u.pathname.startsWith('/open/'),
         handle: handleOpenAppDeepLink,
+    },
+    {
+        match: u => u.host === 'my-nordic' && u.pathname === '/auth/callback',
+        handle: u => completeOauthLogin(u.toString()),
     },
 ];
 
