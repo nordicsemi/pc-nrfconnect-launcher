@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import { type AccountInfo } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -29,6 +30,8 @@ export type State = {
     isRemoveArtifactoryTokenVisible: boolean;
     artifactoryTokenInformation?: TokenInformation;
     useChineseAppServer: boolean;
+    account?: AccountInfo;
+    isLoggingIn: boolean;
 };
 
 const initialState: State = {
@@ -39,6 +42,8 @@ const initialState: State = {
     isRemoveArtifactoryTokenVisible: false,
     artifactoryTokenInformation: getPersistedArtifactoryTokenInformation(),
     useChineseAppServer: getPersistedUseChineseAppServer(),
+    account: undefined,
+    isLoggingIn: false,
 };
 
 const slice = createSlice({
@@ -92,6 +97,18 @@ const slice = createSlice({
             state.useChineseAppServer = useChineseAppServer;
             setPersistedUseChineseAppServer(useChineseAppServer);
         },
+        setAccount(state, { payload: account }: PayloadAction<AccountInfo>) {
+            state.account = account;
+        },
+        clearAccount(state) {
+            state.account = undefined;
+        },
+        setIsLoggingIn(
+            state,
+            { payload: isLoggingIn }: PayloadAction<boolean>,
+        ) {
+            state.isLoggingIn = isLoggingIn;
+        },
     },
 });
 
@@ -109,6 +126,9 @@ export const {
     showAddArtifactoryToken,
     showRemoveArtifactoryToken,
     showUpdateCheckComplete,
+    setAccount,
+    clearAccount,
+    setIsLoggingIn,
 } = slice.actions;
 
 export const getShouldCheckForUpdatesAtStartup = (state: RootState) =>
@@ -125,3 +145,5 @@ export const getIsRemoveArtifactoryTokenVisible = (state: RootState) =>
     state.settings.isRemoveArtifactoryTokenVisible;
 export const getUseChineseAppServer = (state: RootState) =>
     state.settings.useChineseAppServer;
+export const getAccount = (state: RootState) => state.settings.account;
+export const getIsLoggingIn = (state: RootState) => state.settings.isLoggingIn;

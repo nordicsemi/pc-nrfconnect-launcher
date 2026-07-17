@@ -26,7 +26,8 @@ export const OAUTH_CONFIG = {
     DOMAIN_HINT: 'nordicsemiextdev.onmicrosoft.com',
     REALM: 'nordicsemiextdev.ciamlogin.com',
     LOGIN_TIMEOUT_MS: 5 * 60 * 1000, // TODO: Adjust as needed. 5 min.
-    MYNORDIC_AUTH_ENTRY_URL: 'http://localhost:8080/',
+    MYNORDIC_AUTH_ENTRY_URL:
+        'https://mynordic-nordicsemi-env-dev-pixel-perfect.vercel.app/en/sign-up/create-account ',
 };
 
 let pca: PublicClientApplication | undefined;
