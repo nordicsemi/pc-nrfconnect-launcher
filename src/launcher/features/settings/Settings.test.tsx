@@ -30,6 +30,16 @@ jest.mock('react-bootstrap', () => ({
     ModalTitle: 'ModalTitle',
 }));
 
+jest.mock('@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth', () => ({
+    inMain: {
+        getAccountInfo: jest
+            .fn()
+            .mockResolvedValue({ status: false, error: 'No account found.' }),
+        startLogin: jest.fn(),
+        localLogout: jest.fn().mockResolvedValue({ status: true }),
+    },
+}));
+
 describe('SettingsView', () => {
     it('should render with check for updates enabled', () => {
         expect(

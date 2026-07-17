@@ -67,7 +67,7 @@ export const startOauthLogin = async (): Promise<GenericAuthResult<null>> => {
             initiatingWindow,
         });
 
-        shell.openExternal(entraAuthUrl.toString()).catch(err => {
+        shell.openExternal(myNordicUrl.toString()).catch(err => {
             clearTimeout(timeoutId);
             pendingLogins.delete(state);
             resolve({ status: false, error: `Could not open browser: ${err}` });

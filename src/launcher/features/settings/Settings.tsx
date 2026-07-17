@@ -10,6 +10,7 @@ import WithScrollbarContainer from '../../util/WithScrollbarContainer';
 import AddSourceDialog from '../sources/AddSourceDialog';
 import ConfirmRemoveSourceDialog from '../sources/ConfirmRemoveSourceDialog';
 import AddArtifactoryTokenDialog from './AddArtifactoryTokenDialog';
+import Account from './Cards/Account';
 import AppSources from './Cards/AppSources';
 import Authentication from './Cards/Authentication';
 import ChineseAppServer from './Cards/ChineseAppServer';
@@ -23,6 +24,7 @@ export default () => (
         <div className="settings-pane-container">
             <Updates />
             <AppSources />
+            <Account />
             <Authentication />
             <ChineseAppServer />
             <UsageStatistics />
