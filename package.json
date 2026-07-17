@@ -134,6 +134,7 @@
         "xvfb-maybe": "0.2.1"
     },
     "dependencies": {
+        "@azure/msal-node": "^5.3.1",
         "@electron/remote": "^2.1.2",
         "chmodr": "1.2.0",
         "electron-store": "8.1.0",

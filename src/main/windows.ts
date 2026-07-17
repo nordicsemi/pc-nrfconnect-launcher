@@ -334,3 +334,11 @@ export const getAppDetails = (webContents: WebContents) => {
         path: appWindow.app.installed.path,
     };
 };
+
+export const focusWindow = (window: BrowserWindow) => {
+    if (window.isDestroyed()) return;
+    if (window.isMinimized()) window.restore();
+    window.show();
+    window.focus();
+    if (process.platform === 'darwin') electronApp.focus({ steal: true });
+};
