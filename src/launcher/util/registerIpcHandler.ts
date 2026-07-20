@@ -9,6 +9,7 @@ import { ErrorDialogActions } from '@nordicsemiconductor/pc-nrfconnect-shared';
 import * as appInstallProgress from '../../ipc/appInstallProgress';
 import * as installJlink from '../../ipc/jlinkProgress';
 import * as launcherUpdateProgress from '../../ipc/launcherUpdateProgress';
+import * as openAppConfirmation from '../../ipc/openAppConfirmation';
 import * as proxyLogin from '../../ipc/proxyLogin';
 import * as showErrorDialog from '../../ipc/showErrorDialog';
 import {
@@ -17,6 +18,7 @@ import {
     resetAppInstallProgress,
     updateAppInstallProgress,
 } from '../features/apps/appsSlice';
+import { openAppConfirmationRequested } from '../features/deepLink/openAppConfirmationSlice';
 import { updateProgress as updateJLinkProgress } from '../features/jlinkUpdate/jlinkUpdateSlice';
 import {
     reset,
@@ -58,4 +60,10 @@ export default (dispatch: AppDispatch) => {
     installJlink.forMain.registerUpdateJLinkProgress(update => {
         dispatch(updateJLinkProgress(update));
     });
+
+    openAppConfirmation.forMain.registerRequestOpenAppConfirmation(
+        (requestId, name, source) => {
+            dispatch(openAppConfirmationRequested({ requestId, name, source }));
+        },
+    );
 };

@@ -39,6 +39,14 @@
     "build": {
         "appId": "com.nordicsemi.nrfconnect",
         "productName": "nRF Connect for Desktop",
+        "protocols": [
+            {
+                "name": "nRF Connect for Desktop",
+                "schemes": [
+                    "nrfconnectfordesktop"
+                ]
+            }
+        ],
         "asarUnpack": [
             "resources/nrfutil-sandboxes",
             "resources/prefetched/jlink"

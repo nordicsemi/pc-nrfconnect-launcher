@@ -13,6 +13,7 @@ import { type ThunkAction } from 'redux-thunk';
 import appleSilicon from './features/appleSilicon/appleSiliconSlice';
 import appDialogs from './features/apps/appDialogsSlice';
 import apps from './features/apps/appsSlice';
+import openAppConfirmation from './features/deepLink/openAppConfirmationSlice';
 import filter from './features/filter/filterSlice';
 import jlinkUpdate from './features/jlinkUpdate/jlinkUpdateSlice';
 import launcherUpdate from './features/launcherUpdate/launcherUpdateSlice';
@@ -39,6 +40,7 @@ export const reducer = {
     settings,
     sources,
     telemetry,
+    openAppConfirmation,
 };
 
 const store = configureStore({
