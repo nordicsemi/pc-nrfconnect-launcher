@@ -9,7 +9,8 @@ import { app } from 'electron';
 import { logger } from '../log';
 import { completeOauthLogin } from '../oauth/login';
 import { handleOpenAppDeepLink } from './handlers/appsHandler';
-import { DEEPLINK_SCHEME } from './protocolClient';
+
+export const DEEPLINK_SCHEME = 'nrfconnectfordesktop';
 
 // Define deep link routes here. Each route has a match function and a handle function.
 // The match function should return true if the URL matches the route, and the handle function should handle the URL.
@@ -51,5 +52,11 @@ export const handleDeepLink = (rawUrl?: string) => {
     );
 };
 
-export const findDeepLink = (args: string[]) =>
+const findDeepLink = (args: string[]) =>
     args.find(a => a.startsWith(`${DEEPLINK_SCHEME}://`));
+
+export const containsDeepLink = (args: string[]) => findDeepLink(args) != null;
+
+export const handleDeepLinkFromArgv = (argv = process.argv) => {
+    handleDeepLink(findDeepLink(argv));
+};
