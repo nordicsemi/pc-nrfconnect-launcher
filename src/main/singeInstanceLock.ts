@@ -8,29 +8,24 @@ import { app } from 'electron/main';
 
 import argv from './argv';
 import { openInitialWindow } from './configureElectronApp';
-import { findDeepLink, handleDeepLink } from './deepLink';
+import { containsDeepLink, handleDeepLinkFromArgv } from './deepLink';
 
 export default () => {
     if (argv['new-instance']) {
         return;
     }
 
-    const isFirstInstance = app.requestSingleInstanceLock({
-        argv: JSON.stringify(argv),
-    });
+    const isFirstInstance = app.requestSingleInstanceLock(argv);
 
     if (isFirstInstance) {
         app.on(
             'second-instance',
-            (_event, argvFromSecondInstance, _wd, message) => {
-                const link = findDeepLink(argvFromSecondInstance);
-                if (link) {
-                    handleDeepLink(link);
-                    return; // Don't open a new window if the second instance was launched with a deep link, just handle the link.
+            (_event, argvFromSecondInstance, _wd, parsedArgv) => {
+                if (containsDeepLink(argvFromSecondInstance)) {
+                    handleDeepLinkFromArgv(argvFromSecondInstance);
+                } else {
+                    openInitialWindow(parsedArgv as typeof argv);
                 }
-
-                const parsed = JSON.parse((message as { argv: string }).argv);
-                openInitialWindow(parsed);
             },
         );
     } else {

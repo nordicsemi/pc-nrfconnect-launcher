@@ -9,10 +9,9 @@ import path from 'path';
 
 import { logger } from '../log';
 import { registerLinuxAppImageProtocolClient } from './registerLinuxProtocolClient';
+import { DEEPLINK_SCHEME, handleDeepLink } from './router';
 
-export const DEEPLINK_SCHEME = 'nrfconnectfordesktop';
-
-export const registerProtocolClient = () => {
+export const registerDeepLinkHandling = () => {
     if (process.platform === 'linux') {
         // AppImage is not installed into the system, so there is no existing
         // .desktop file for setAsDefaultProtocolClient() to update.
@@ -32,4 +31,9 @@ export const registerProtocolClient = () => {
     } else {
         app.setAsDefaultProtocolClient(DEEPLINK_SCHEME);
     }
+
+    app.on('open-url', (event, url) => {
+        event.preventDefault();
+        handleDeepLink(url);
+    });
 };
