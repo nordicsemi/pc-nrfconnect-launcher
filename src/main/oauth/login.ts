@@ -13,6 +13,16 @@ import { getPca, OAUTH_CONFIG } from './config';
 
 const crypto = new CryptoProvider();
 
+const toSnakeCaseParams = (
+    params: Record<string, string>,
+): Record<string, string> =>
+    Object.fromEntries(
+        Object.entries(params).map(([key, value]) => [
+            key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
+            value,
+        ]),
+    );
+
 interface PendingLogin {
     resolve: (result: GenericAuthResult<null>) => void;
     codeVerifier: string;
@@ -40,11 +50,11 @@ export const startOauthLogin = async (): Promise<GenericAuthResult<null>> => {
         prompt: OAUTH_CONFIG.PROMPT,
         responseMode: ResponseMode.QUERY,
         // domainHint: OAUTH_CONFIG.DOMAIN_HINT,
-        extraQueryParameters: {
+        extraQueryParameters: toSnakeCaseParams({
             source: OAUTH_CONFIG.SOURCE,
             responseType: OAUTH_CONFIG.RESPONSE_TYPE,
             // realm: OAUTH_CONFIG.REALM,
-        },
+        }),
     });
 
     const entraAuthUrl = new URL(url);
