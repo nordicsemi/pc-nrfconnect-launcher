@@ -4,7 +4,10 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { InteractionRequiredAuthError } from '@azure/msal-node';
+import {
+    type AuthenticationResult,
+    InteractionRequiredAuthError,
+} from '@azure/msal-node';
 import {
     type AccountInfo,
     type GenericAuthResult,
@@ -48,9 +51,9 @@ export const getProfileInfo = async (): Promise<
     return { status: true, data: profile };
 };
 
-export const getAccessTokenSilently = async (
+const acquireToken = async (
     scopes?: string[],
-): Promise<GenericAuthResult<string>> => {
+): Promise<GenericAuthResult<AuthenticationResult>> => {
     const pca = getPca();
     const account = (await pca.getTokenCache().getAllAccounts())[0];
     if (!account) return { status: false, error: 'No account found.' };
@@ -61,7 +64,7 @@ export const getAccessTokenSilently = async (
             scopes: scopes ?? OAUTH_CONFIG.DEFAULT_SCOPES,
             forceRefresh: false,
         });
-        return { status: true, data: result.accessToken };
+        return { status: true, data: result };
     } catch (err) {
         if (err instanceof InteractionRequiredAuthError) {
             // refresh token failed, likely due to expired refresh token or revoked permissions.
@@ -70,6 +73,22 @@ export const getAccessTokenSilently = async (
         }
         throw err; // Unexpected error (e.g. network issue, temporary service issue) -> propagate.
     }
+};
+
+export const getAccessTokenSilently = async (
+    scopes?: string[],
+): Promise<GenericAuthResult<string>> => {
+    const result = await acquireToken(scopes);
+    return result.status
+        ? { status: true, data: result.data.accessToken }
+        : result;
+};
+
+export const getIdTokenSilently = async (
+    scopes?: string[],
+): Promise<GenericAuthResult<string>> => {
+    const result = await acquireToken(scopes);
+    return result.status ? { status: true, data: result.data.idToken } : result;
 };
 
 export const localLogout = async (): Promise<GenericAuthResult<null>> => {
