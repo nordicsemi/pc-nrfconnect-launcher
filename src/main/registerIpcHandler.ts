@@ -58,6 +58,7 @@ import { startOauthLogin } from './oauth/login';
 import {
     getAccessTokenSilently,
     getActiveAccountInfo,
+    getIdTokenSilently,
     getProfileInfo,
     localLogout,
 } from './oauth/session';
@@ -162,6 +163,7 @@ export default () => {
 
     auth.forRenderer.registerStartLogin(startOauthLogin);
     auth.forRenderer.registerLocalLogout(localLogout);
+    auth.forRenderer.registerGetIdToken(getIdTokenSilently);
     auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);
     auth.forRenderer.registerGetAccountInfo(getActiveAccountInfo);
     auth.forRenderer.registerGetProfileInfo(getProfileInfo);
