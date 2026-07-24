@@ -18,7 +18,7 @@ export const OAUTH_CONFIG = {
         'profile',
         'email',
         'offline_access',
-        'User.Read',
+        'https://graph.microsoft.com/User.Read',
     ],
     SOURCE: 'nrfconnectfordesktop',
     RESPONSE_TYPE: 'code',
@@ -28,6 +28,7 @@ export const OAUTH_CONFIG = {
     LOGIN_TIMEOUT_MS: 5 * 60 * 1000, // TODO: Adjust as needed. 5 min.
     MYNORDIC_AUTH_ENTRY_URL:
         'https://mynordic-nordicsemi-env-dev-pixel-perfect.vercel.app/en/sign-up/create-account ',
+    APIM_SUBSCRIPTION_KEY: 'b8e68a21b840451288812ec5228ba619',
 };
 
 let pca: PublicClientApplication | undefined;

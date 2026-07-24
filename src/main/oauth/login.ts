@@ -10,6 +10,7 @@ import { BrowserWindow, shell } from 'electron';
 
 import { focusWindow } from '../windows';
 import { getPca, OAUTH_CONFIG } from './config';
+import { getActiveAccountInfo, registerSession } from './session';
 
 const crypto = new CryptoProvider();
 
@@ -114,13 +115,14 @@ export const completeOauthLogin = async (
 
     try {
         const pca = getPca();
-        await pca.acquireTokenByCode({
+        const tokenResult = await pca.acquireTokenByCode({
             code,
             scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
             redirectUri: OAUTH_CONFIG.REDIRECT_URI,
             codeVerifier: pending.codeVerifier,
         });
-        // MSAL handles token caching internally, so we don't need to do anything with the result here. If it succeeds, we consider the login successful.
+
+        await registerSession(tokenResult);
         pending.resolve({ status: true, data: null });
     } catch (err) {
         pending.resolve({ status: false, error: String(err) });
