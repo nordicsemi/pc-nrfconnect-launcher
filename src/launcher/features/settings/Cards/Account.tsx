@@ -27,15 +27,10 @@ export default () => {
         dispatch(refreshAccount());
 
         auth.registerOnStateChanged(state => {
-            console.log('Auth state changed:', state);
             setAuthState(state);
             dispatch(refreshAccount());
         });
     }, [dispatch]);
-
-    useEffect(() => {
-        console.log('Auth state updated:', authState);
-    }, [authState]);
 
     const button = account ? (
         <Button
