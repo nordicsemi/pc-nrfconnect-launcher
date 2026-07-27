@@ -57,7 +57,7 @@ import {
 import { startOauthLogin } from './oauth/login';
 import {
     getAccessTokenSilently,
-    getActiveAccountInfo,
+    getAuthStatus,
     getIdTokenSilently,
     getProfileInfo,
     singleSignOut,
@@ -161,10 +161,10 @@ export default () => {
     jlink.forRenderer.registerGetJLinkState(getJLinkState);
     jlink.forRenderer.registerInstallJLink(installJLink);
 
+    auth.forRenderer.registerGetAuthStatus(getAuthStatus);
     auth.forRenderer.registerStartLogin(startOauthLogin);
     auth.forRenderer.registerSingleSignOut(singleSignOut);
     auth.forRenderer.registerGetIdToken(getIdTokenSilently);
     auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);
-    auth.forRenderer.registerGetAccountInfo(getActiveAccountInfo);
     auth.forRenderer.registerGetProfileInfo(getProfileInfo);
 };

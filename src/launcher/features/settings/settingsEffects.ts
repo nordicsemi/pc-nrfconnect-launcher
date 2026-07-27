@@ -13,11 +13,7 @@ import { inMain as auth } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/au
 import cleanIpcErrorMessage from '../../../common/cleanIpcErrorMessage';
 import { inMain as artifactoryToken } from '../../../ipc/artifactoryToken';
 import type { AppThunk } from '../../store';
-import {
-    clearAccount,
-    setAccount,
-    setArtifactoryTokenInformation,
-} from './settingsSlice';
+import { setArtifactoryTokenInformation } from './settingsSlice';
 
 export const setArtifactoryToken =
     (token: string): AppThunk =>
@@ -38,15 +34,6 @@ export const setArtifactoryToken =
         dispatch(setArtifactoryTokenInformation(tokenInformation));
     };
 
-export const refreshAccount = (): AppThunk => async dispatch => {
-    const result = await auth.getAccountInfo();
-    if (result.status) {
-        dispatch(setAccount(result.data));
-    } else {
-        dispatch(clearAccount());
-    }
-};
-
 export const logIn = (): AppThunk => async dispatch => {
     try {
         const result = await auth.startLogin();
@@ -54,9 +41,7 @@ export const logIn = (): AppThunk => async dispatch => {
             dispatch(
                 ErrorDialogActions.showDialog(`Login failed: ${result.error}`),
             );
-            return;
         }
-        await dispatch(refreshAccount());
     } catch (error) {
         dispatch(
             ErrorDialogActions.showDialog(
@@ -66,7 +51,6 @@ export const logIn = (): AppThunk => async dispatch => {
     }
 };
 
-export const logOut = (): AppThunk => async dispatch => {
+export const logOut = (): AppThunk => async () => {
     await auth.singleSignOut();
-    dispatch(clearAccount());
 };

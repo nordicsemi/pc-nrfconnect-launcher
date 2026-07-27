@@ -37,6 +37,7 @@ const finishLogin = (state: string, result: GenericAuthResult<null>) => {
     getActiveAccountInfo().then(account =>
         notifyAuthStateChanged({
             status: account.status ? 'signedIn' : 'signedOut',
+            account: account.status ? account.data : undefined,
         }),
     );
 };
