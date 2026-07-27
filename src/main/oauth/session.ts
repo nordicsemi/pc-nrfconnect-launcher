@@ -51,15 +51,7 @@ export const registerSession = async (
                 'x-error-id',
             )}`,
         );
-        console.warn(
-            `Session register failed: ${res.status}, errorId=${res.headers.get(
-                'x-error-id',
-            )}, body=${await res.text()}`,
-        );
-        return;
     }
-
-    console.warn('Session registered successfully');
 };
 
 export const getActiveAccountInfo = async (): Promise<
@@ -157,7 +149,7 @@ export const validateSession = async (): Promise<
         if (res.status === 200 && header === 'validated')
             return { status: true, data: 'validated' };
         if (res.status === 401 || header === 'invalidated') {
-            await localLogout(); // If the server session is invalidated somewhere else
+            await removeLocalSessions(); // If the server session is invalidated somewhere else
             return { status: true, data: 'invalidated' };
         }
         return { status: true, data: 'invalid' };
@@ -167,11 +159,12 @@ export const validateSession = async (): Promise<
     }
 };
 
-export const localLogout = async (): Promise<GenericAuthResult<null>> => {
+const removeLocalSessions = async (): Promise<GenericAuthResult<null>> => {
     const cache = getPca().getTokenCache();
     const accounts = await cache.getAllAccounts();
     await Promise.all(accounts.map(account => cache.removeAccount(account)));
     clearMsalCache();
+    notifyAuthStateChanged({ status: 'signedOut' });
     return { status: true, data: null };
 };
 
@@ -185,7 +178,6 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
         const sid = (idTokenClaims as { sid?: string }).sid;
 
         // 2. Revoke server-side session first
-        console.warn('Single sign-out: revoking server-side session...');
         await fetch(`${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/logout`, {
             method: 'POST',
             headers: {
@@ -197,24 +189,17 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
         });
 
         // 3. Now clear local MSAL cache
-        console.warn('Single sign-out: clearing local MSAL cache...');
-        await localLogout();
-        notifyAuthStateChanged({ status: 'signedOut' });
+        await removeLocalSessions();
 
         // 4. Redirect to Entra to clear the SSO cookie as well
         const logoutUrl =
             `https://${OAUTH_CONFIG.HOST}/${OAUTH_CONFIG.TENANT_ID}/oauth2/v2.0/logout` +
             `?post_logout_redirect_uri=${encodeURIComponent(OAUTH_CONFIG.POST_LOGOUT_URI)}` +
             `&id_token_hint=${result.data.idToken}`;
-        console.warn(
-            'Single sign-out: opening browser to logout URL:',
-            logoutUrl,
-        );
         await shell.openExternal(logoutUrl);
 
         return { status: true, data: null };
     } catch (err) {
-        console.error('Single sign-out failed:', err);
         return {
             status: false,
             error: err instanceof Error ? err.message : String(err),

@@ -31,7 +31,6 @@ export type State = {
     artifactoryTokenInformation?: TokenInformation;
     useChineseAppServer: boolean;
     account?: AccountInfo;
-    isLoggingIn: boolean;
 };
 
 const initialState: State = {
@@ -43,7 +42,6 @@ const initialState: State = {
     artifactoryTokenInformation: getPersistedArtifactoryTokenInformation(),
     useChineseAppServer: getPersistedUseChineseAppServer(),
     account: undefined,
-    isLoggingIn: false,
 };
 
 const slice = createSlice({
@@ -103,12 +101,6 @@ const slice = createSlice({
         clearAccount(state) {
             state.account = undefined;
         },
-        setIsLoggingIn(
-            state,
-            { payload: isLoggingIn }: PayloadAction<boolean>,
-        ) {
-            state.isLoggingIn = isLoggingIn;
-        },
     },
 });
 
@@ -128,7 +120,6 @@ export const {
     showUpdateCheckComplete,
     setAccount,
     clearAccount,
-    setIsLoggingIn,
 } = slice.actions;
 
 export const getShouldCheckForUpdatesAtStartup = (state: RootState) =>
@@ -146,4 +137,3 @@ export const getIsRemoveArtifactoryTokenVisible = (state: RootState) =>
 export const getUseChineseAppServer = (state: RootState) =>
     state.settings.useChineseAppServer;
 export const getAccount = (state: RootState) => state.settings.account;
-export const getIsLoggingIn = (state: RootState) => state.settings.isLoggingIn;
