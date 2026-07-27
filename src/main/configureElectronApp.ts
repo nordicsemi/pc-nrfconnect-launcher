@@ -152,7 +152,6 @@ export default () => {
     });
 
     app.on('browser-window-focus', () => {
-        console.log('Browser window focused, triggering session validation...');
         triggerAuthValidate();
     });
 };
