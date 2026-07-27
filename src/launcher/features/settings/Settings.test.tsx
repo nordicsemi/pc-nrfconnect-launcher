@@ -36,7 +36,10 @@ jest.mock('@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth', () => ({
             .fn()
             .mockResolvedValue({ status: false, error: 'No account found.' }),
         startLogin: jest.fn(),
-        localLogout: jest.fn().mockResolvedValue({ status: true }),
+        singleSignOut: jest
+            .fn()
+            .mockResolvedValue({ status: true, data: null }),
+        registerOnStateChanged: jest.fn(),
     },
 }));
 
