@@ -10,6 +10,7 @@ import {
 } from '@azure/msal-node';
 import {
     type AccountInfo,
+    type AuthState,
     type GenericAuthResult,
     type ProfileInfo,
 } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
@@ -18,7 +19,7 @@ import { shell } from 'electron';
 import { clearMsalCache } from '../../common/persistedStore';
 import { logger } from '../log';
 import { getPca, OAUTH_CONFIG } from './config';
-import { notifyAuthStateChanged } from './helpers';
+import { getLastAuthState, notifyAuthStateChanged } from './helpers';
 
 export const registerSession = async (
     authResult: AuthenticationResult,
@@ -52,6 +53,17 @@ export const registerSession = async (
             )}`,
         );
     }
+};
+
+export const getAuthStatus = async (): Promise<AuthState> => {
+    const last = getLastAuthState();
+    if (last) return last;
+
+    const account = await getActiveAccountInfo();
+    return {
+        status: account.status ? 'signedIn' : 'signedOut',
+        account: account.status ? account.data : undefined,
+    };
 };
 
 export const getActiveAccountInfo = async (): Promise<
@@ -172,7 +184,12 @@ const removeLocalSessions = async (): Promise<GenericAuthResult<null>> => {
 
 export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
     try {
-        notifyAuthStateChanged({ status: 'signingOut' });
+        const account = await getActiveAccountInfo();
+        notifyAuthStateChanged({
+            status: 'signingOut',
+            account: account.status ? account.data : undefined,
+        });
+
         // 1. Acquire token to get the sid and id_token_hint
         const result = await acquireToken();
         if (!result.status) {

@@ -6,36 +6,34 @@
 
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import { Spinner } from '@nordicsemiconductor/pc-nrfconnect-shared';
 import {
     type AuthState,
     inMain as auth,
 } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 
-import { useLauncherDispatch, useLauncherSelector } from '../../../util/hooks';
+import { useLauncherDispatch } from '../../../util/hooks';
 import Card from '../../layout/Card';
 import Col from '../../layout/Col';
 import Row from '../../layout/Row';
-import { logIn, logOut, refreshAccount } from '../settingsEffects';
-import { getAccount } from '../settingsSlice';
+import { logIn, logOut } from '../settingsEffects';
 
 export default () => {
     const dispatch = useLauncherDispatch();
     const [authState, setAuthState] = useState<AuthState | null>(null);
-    const account = useLauncherSelector(getAccount);
 
     useEffect(() => {
-        dispatch(refreshAccount());
+        auth.getAuthStatus().then(setAuthState);
+        auth.registerOnStateChanged(setAuthState);
+    }, []);
 
-        auth.registerOnStateChanged(state => {
-            setAuthState(state);
-            dispatch(refreshAccount());
-        });
-    }, [dispatch]);
+    const account = authState?.account;
+    const status = authState?.status;
 
     const button = account ? (
         <Button
             variant="outline-secondary"
-            disabled={authState?.status === 'signingOut'}
+            disabled={status === 'signingOut'}
             onClick={() => dispatch(logOut())}
         >
             Log out
@@ -43,12 +41,16 @@ export default () => {
     ) : (
         <Button
             variant="outline-primary"
-            disabled={authState?.status === 'signingIn'}
+            disabled={status === 'signingIn'}
             onClick={() => dispatch(logIn())}
         >
-            {authState?.status === 'signingIn'
-                ? 'Logging in…'
-                : 'Log in / Sign up'}
+            {status === 'signingIn' ? (
+                <span>
+                    <Spinner size="sm" /> Signing in…
+                </span>
+            ) : (
+                'Sign in'
+            )}
         </Button>
     );
 
