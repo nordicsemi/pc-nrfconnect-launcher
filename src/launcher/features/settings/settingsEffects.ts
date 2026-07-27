@@ -17,7 +17,6 @@ import {
     clearAccount,
     setAccount,
     setArtifactoryTokenInformation,
-    setIsLoggingIn,
 } from './settingsSlice';
 
 export const setArtifactoryToken =
@@ -49,7 +48,6 @@ export const refreshAccount = (): AppThunk => async dispatch => {
 };
 
 export const logIn = (): AppThunk => async dispatch => {
-    dispatch(setIsLoggingIn(true));
     try {
         const result = await auth.startLogin();
         if (!result.status) {
@@ -59,12 +57,16 @@ export const logIn = (): AppThunk => async dispatch => {
             return;
         }
         await dispatch(refreshAccount());
-    } finally {
-        dispatch(setIsLoggingIn(false));
+    } catch (error) {
+        dispatch(
+            ErrorDialogActions.showDialog(
+                `Login failed: ${cleanIpcErrorMessage(describeError(error))}`,
+            ),
+        );
     }
 };
 
 export const logOut = (): AppThunk => async dispatch => {
-    await auth.localLogout();
+    await auth.singleSignOut();
     dispatch(clearAccount());
 };

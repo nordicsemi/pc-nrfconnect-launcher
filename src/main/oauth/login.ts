@@ -10,7 +10,8 @@ import { BrowserWindow, shell } from 'electron';
 
 import { focusWindow } from '../windows';
 import { getPca, OAUTH_CONFIG } from './config';
-import { getActiveAccountInfo, registerSession } from './session';
+import { notifyAuthStateChanged } from './helpers';
+import { registerSession } from './session';
 
 const crypto = new CryptoProvider();
 
@@ -35,6 +36,7 @@ interface PendingLogin {
 const pendingLogins = new Map<string, PendingLogin>();
 
 export const startOauthLogin = async (): Promise<GenericAuthResult<null>> => {
+    notifyAuthStateChanged({ status: 'signingIn' });
     const pca = getPca();
     const initiatingWindow = BrowserWindow.getFocusedWindow();
     const { verifier, challenge } = await crypto.generatePkceCodes();
@@ -50,11 +52,9 @@ export const startOauthLogin = async (): Promise<GenericAuthResult<null>> => {
         nonce,
         prompt: OAUTH_CONFIG.PROMPT,
         responseMode: ResponseMode.QUERY,
-        // domainHint: OAUTH_CONFIG.DOMAIN_HINT,
         extraQueryParameters: toSnakeCaseParams({
             source: OAUTH_CONFIG.SOURCE,
             responseType: OAUTH_CONFIG.RESPONSE_TYPE,
-            // realm: OAUTH_CONFIG.REALM,
         }),
     });
 
@@ -78,7 +78,7 @@ export const startOauthLogin = async (): Promise<GenericAuthResult<null>> => {
             initiatingWindow,
         });
 
-        shell.openExternal(myNordicUrl.toString()).catch(err => {
+        shell.openExternal(entraAuthUrl.toString()).catch(err => {
             clearTimeout(timeoutId);
             pendingLogins.delete(state);
             resolve({ status: false, error: `Could not open browser: ${err}` });
@@ -123,6 +123,10 @@ export const completeOauthLogin = async (
         });
 
         await registerSession(tokenResult);
+
+        notifyAuthStateChanged({
+            status: 'signedIn',
+        });
         pending.resolve({ status: true, data: null });
     } catch (err) {
         pending.resolve({ status: false, error: String(err) });

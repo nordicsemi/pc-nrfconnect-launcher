@@ -60,7 +60,6 @@ import {
     getActiveAccountInfo,
     getIdTokenSilently,
     getProfileInfo,
-    localLogout,
     singleSignOut,
 } from './oauth/session';
 import { openFile, openFileLocation, openUrl } from './open';
@@ -163,7 +162,6 @@ export default () => {
     jlink.forRenderer.registerInstallJLink(installJLink);
 
     auth.forRenderer.registerStartLogin(startOauthLogin);
-    auth.forRenderer.registerLocalLogout(localLogout);
     auth.forRenderer.registerSingleSignOut(singleSignOut);
     auth.forRenderer.registerGetIdToken(getIdTokenSilently);
     auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);

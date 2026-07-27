@@ -335,6 +335,12 @@ export const getAppDetails = (webContents: WebContents) => {
     };
 };
 
+export const getAllWindowWebContents = (): WebContents[] =>
+    [
+        ...(launcherWindow ? [launcherWindow.webContents] : []),
+        ...appWindows.map(w => w.browserWindow.webContents),
+    ].filter(wc => !wc.isDestroyed());
+
 export const focusWindow = (window: BrowserWindow) => {
     if (window.isDestroyed()) return;
     if (window.isMinimized()) window.restore();

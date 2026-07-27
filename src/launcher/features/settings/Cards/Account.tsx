@@ -6,41 +6,54 @@
 
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { inMain as auth } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
+import {
+    type AuthState,
+    inMain as auth,
+} from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 
 import { useLauncherDispatch, useLauncherSelector } from '../../../util/hooks';
 import Card from '../../layout/Card';
 import Col from '../../layout/Col';
 import Row from '../../layout/Row';
 import { logIn, logOut, refreshAccount } from '../settingsEffects';
-import { getAccount, getIsLoggingIn } from '../settingsSlice';
+import { getAccount } from '../settingsSlice';
 
 export default () => {
     const dispatch = useLauncherDispatch();
+    const [authState, setAuthState] = useState<AuthState | null>(null);
     const account = useLauncherSelector(getAccount);
-    const isLoggingIn = useLauncherSelector(getIsLoggingIn);
-    const [tokenResult, setTokenResult] = useState<string>();
 
     useEffect(() => {
         dispatch(refreshAccount());
+
+        auth.registerOnStateChanged(state => {
+            console.log('Auth state changed:', state);
+            setAuthState(state);
+            dispatch(refreshAccount());
+        });
     }, [dispatch]);
 
-    const handleGetToken = async () => {
-        const result = await auth.getAccessToken(); // без args → default scopes
-        setTokenResult(result.status ? result.data : `Error: ${result.error}`);
-    };
+    useEffect(() => {
+        console.log('Auth state updated:', authState);
+    }, [authState]);
 
     const button = account ? (
-        <Button variant="outline-secondary" onClick={() => dispatch(logOut())}>
+        <Button
+            variant="outline-secondary"
+            disabled={authState?.status === 'signingOut'}
+            onClick={() => dispatch(logOut())}
+        >
             Log out
         </Button>
     ) : (
         <Button
             variant="outline-primary"
-            disabled={isLoggingIn}
+            disabled={authState?.status === 'signingIn'}
             onClick={() => dispatch(logIn())}
         >
-            {isLoggingIn ? 'Logging in…' : 'Log in / Sign up'}
+            {authState?.status === 'signingIn'
+                ? 'Logging in…'
+                : 'Log in / Sign up'}
         </Button>
     );
 
@@ -53,26 +66,6 @@ export default () => {
                         : 'Sign in with your My Nordic account.'}
                 </Col>
             </Row>
-            {account && (
-                <Row className="tw-mt-4">
-                    <Col fixedSize>
-                        <Button
-                            size="sm"
-                            variant="outline-primary"
-                            onClick={handleGetToken}
-                        >
-                            Get access token
-                        </Button>
-                    </Col>
-                </Row>
-            )}
-            {tokenResult && (
-                <Row className="tw-mt-4">
-                    <Col className="tw-break-all tw-font-mono tw-text-xs">
-                        {tokenResult}
-                    </Col>
-                </Row>
-            )}
         </Card>
     );
 };
