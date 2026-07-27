@@ -106,6 +106,7 @@ const acquireToken = async (
         if (err instanceof InteractionRequiredAuthError) {
             // refresh token failed, likely due to expired refresh token or revoked permissions.
             // await localLogout(); // Clear cache to ensure next login is clean and UI status.
+            notifyAuthStateChanged({ status: 'interactionRequired' });
             return { status: false, error: 'Interaction required.' };
         }
         throw err; // Unexpected error (e.g. network issue, temporary service issue) -> propagate.
@@ -152,6 +153,7 @@ export const validateSession = async (): Promise<
             await removeLocalSessions(); // If the server session is invalidated somewhere else
             return { status: true, data: 'invalidated' };
         }
+        await removeLocalSessions();
         return { status: true, data: 'invalid' };
     } catch {
         // inconclusive due to network error or temporary service issue, do not log out the user
@@ -173,7 +175,11 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
         notifyAuthStateChanged({ status: 'signingOut' });
         // 1. Acquire token to get the sid and id_token_hint
         const result = await acquireToken();
-        if (!result.status) return { status: false, error: result.error };
+        if (!result.status) {
+            // No valid token. We can't revoke server-side session or hit Entra, but we should still complete the local logout.
+            await removeLocalSessions();
+            return { status: true, data: null };
+        }
         const { accessToken, idTokenClaims } = result.data;
         const sid = (idTokenClaims as { sid?: string }).sid;
 
@@ -200,6 +206,7 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
 
         return { status: true, data: null };
     } catch (err) {
+        notifyAuthStateChanged({ status: 'signedOut' });
         return {
             status: false,
             error: err instanceof Error ? err.message : String(err),
