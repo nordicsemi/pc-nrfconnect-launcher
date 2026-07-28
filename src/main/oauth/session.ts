@@ -198,7 +198,9 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
             return { status: true, data: null };
         }
         const { accessToken, idTokenClaims } = result.data;
-        const sid = (idTokenClaims as { sid?: string }).sid;
+        const claims = idTokenClaims as { sid?: string; login_hint?: string };
+        const sid = claims.sid;
+        const loginHint = claims.login_hint;
 
         // 2. Revoke server-side session first
         await fetch(`${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/logout`, {
@@ -215,10 +217,14 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
         await removeLocalSessions();
 
         // 4. Redirect to Entra to clear the SSO cookie as well
-        const logoutUrl =
+        let logoutUrl =
             `https://${OAUTH_CONFIG.HOST}/${OAUTH_CONFIG.TENANT_ID}/oauth2/v2.0/logout` +
             `?post_logout_redirect_uri=${encodeURIComponent(OAUTH_CONFIG.POST_LOGOUT_URI)}` +
             `&id_token_hint=${result.data.idToken}`;
+
+        if (loginHint)
+            logoutUrl += `&logout_hint=${encodeURIComponent(loginHint)}`;
+
         await shell.openExternal(logoutUrl);
 
         return { status: true, data: null };
