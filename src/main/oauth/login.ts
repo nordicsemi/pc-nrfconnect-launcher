@@ -103,7 +103,9 @@ export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
             entraAuthUrl.searchParams.forEach((value, key) => {
                 myNordicUrl.searchParams.set(key, value);
             });
-            activeLogin.authUrl = myNordicUrl.toString();
+            activeLogin.authUrl = OAUTH_CONFIG.USE_MYNORDIC_FLOW
+                ? myNordicUrl.toString()
+                : entraAuthUrl.toString();
 
             await shell.openExternal(activeLogin.authUrl);
         } catch (err) {
