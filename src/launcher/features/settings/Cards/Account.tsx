@@ -6,7 +6,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { Spinner } from '@nordicsemiconductor/pc-nrfconnect-shared';
 import {
     type AuthState,
     inMain as auth,
@@ -27,16 +26,25 @@ export default () => {
         auth.registerOnStateChanged(setAuthState);
     }, []);
 
-    const account = authState?.account;
     const status = authState?.status;
+    const account = authState?.account;
+    const name = account?.name ?? account?.username;
 
-    const button = account ? (
+    const showAccountView = status === 'signedIn' || status === 'signingOut';
+
+    const signInLabel = () => {
+        if (status === 'signingIn') return 'Logging in…';
+        if (status === 'interactionRequired') return 'Sign in again';
+        return 'Sign in';
+    };
+
+    const button = showAccountView ? (
         <Button
             variant="outline-secondary"
             disabled={status === 'signingOut'}
             onClick={() => dispatch(logOut())}
         >
-            Log out
+            {status === 'signingOut' ? 'Signing out…' : 'Log out'}
         </Button>
     ) : (
         <Button
@@ -44,24 +52,23 @@ export default () => {
             disabled={status === 'signingIn'}
             onClick={() => dispatch(logIn())}
         >
-            {status === 'signingIn' ? (
-                <span>
-                    <Spinner size="sm" /> Signing in…
-                </span>
-            ) : (
-                'Sign in'
-            )}
+            {signInLabel()}
         </Button>
     );
+
+    const body = () => {
+        if (showAccountView) return `Signed in as ${name}`;
+        if (status === 'interactionRequired')
+            return name
+                ? `Your session for ${name} expired. Please sign in again.`
+                : 'Your session expired. Please sign in again.';
+        return 'Sign in with your My Nordic account.';
+    };
 
     return (
         <Card title="My Nordic account" titleButton={button}>
             <Row className="tw-mt-4">
-                <Col className="tw-text-sm tw-text-gray-600">
-                    {account
-                        ? `Signed in as ${account.name ?? account.username}`
-                        : 'Sign in with your My Nordic account.'}
-                </Col>
+                <Col className="tw-text-sm tw-text-gray-600">{body()}</Col>
             </Row>
         </Card>
     );

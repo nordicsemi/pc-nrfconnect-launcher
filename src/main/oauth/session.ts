@@ -60,10 +60,12 @@ export const getAuthStatus = async (): Promise<AuthState> => {
     if (last) return last;
 
     const account = await getActiveAccountInfo();
-    return {
-        status: account.status ? 'signedIn' : 'signedOut',
-        account: account.status ? account.data : undefined,
-    };
+    if (!account.status) return { status: 'signedOut' };
+
+    const token = await acquireToken();
+    return token.status
+        ? { status: 'signedIn', account: account.data }
+        : { status: 'interactionRequired', account: account.data };
 };
 
 export const getActiveAccountInfo = async (): Promise<
@@ -116,9 +118,9 @@ const acquireToken = async (
         return { status: true, data: result };
     } catch (err) {
         if (err instanceof InteractionRequiredAuthError) {
-            // refresh token failed, likely due to expired refresh token or revoked permissions.
-            // await localLogout(); // Clear cache to ensure next login is clean and UI status.
-            notifyAuthStateChanged({ status: 'interactionRequired' });
+            // Refresh token failed, likely due to expired refresh token or revoked permissions.
+            // The user needs to re-authenticate to get a new refresh token.
+            notifyAuthStateChanged({ status: 'interactionRequired', account });
             return { status: false, error: 'Interaction required.' };
         }
         throw err; // Unexpected error (e.g. network issue, temporary service issue) -> propagate.
