@@ -1,0 +1,10 @@
+name: Fix eslint
+
+# Manually fix eslint/prettier issues on a branch without pulling locally.
+
+on:
+    workflow_dispatch:
+
+jobs:
+    fix-eslint:
+        uses: nordicsemi/pc-nrfconnect-shared/.github/workflows/fix-eslint.yml@main
