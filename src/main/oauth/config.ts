@@ -9,9 +9,9 @@ import { PublicClientApplication } from '@azure/msal-node';
 import { cachePlugin } from './storage';
 
 export const OAUTH_CONFIG = {
-    CLIENT_ID: '15ebbfd3-f0ee-466c-bcfd-ff46b810ee81',
-    TENANT_ID: 'c03b7be1-b92c-44ad-bb72-ffa36ef5b0bb',
-    HOST: 'nordicsemiextdev.ciamlogin.com',
+    CLIENT_ID: '5b42d3f5-9af2-4d64-9cb1-00f85bf27da8',
+    TENANT_ID: '1fb18d84-2f00-4d3e-a795-e45655386b44',
+    HOST: 'nordicsemiextprod.ciamlogin.com',
     REDIRECT_URI: `nrfconnectfordesktop://my-nordic/auth/callback`,
     DEFAULT_SCOPES: [
         'openid',
@@ -23,12 +23,11 @@ export const OAUTH_CONFIG = {
     SOURCE: 'nrfconnectfordesktop',
     RESPONSE_TYPE: 'code',
     PROMPT: 'login',
-    DOMAIN_HINT: 'nordicsemiextdev.onmicrosoft.com',
-    REALM: 'nordicsemiextdev.ciamlogin.com',
-    LOGIN_TIMEOUT_MS: 5 * 60 * 1000, // TODO: Adjust as needed. 5 min.
+    LOGIN_TIMEOUT_MS: 10 * 60 * 1000,
     MYNORDIC_AUTH_ENTRY_URL:
-        'https://mynordic-nordicsemi-env-dev-pixel-perfect.vercel.app/en/sign-up/create-account ',
-    APIM_SUBSCRIPTION_KEY: 'b8e68a21b840451288812ec5228ba619',
+        'https://mynordic.nordicsemi.com/en/sign-up/create-account',
+    SLO_BASE_URL: 'https://apim-mynordic-prod.azure-api.net/slo/api/v2',
+    APIM_SUBSCRIPTION_KEY: 'ee0296bb78ff45d78eb4f6619bb5d4d4',
 };
 
 let pca: PublicClientApplication | undefined;

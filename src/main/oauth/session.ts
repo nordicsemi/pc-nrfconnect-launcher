@@ -221,7 +221,7 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
         // 4. Redirect to Entra to clear the SSO cookie as well
         let logoutUrl =
             `https://${OAUTH_CONFIG.HOST}/${OAUTH_CONFIG.TENANT_ID}/oauth2/v2.0/logout` +
-            `?post_logout_redirect_uri=${encodeURIComponent(OAUTH_CONFIG.POST_LOGOUT_URI)}` +
+            `?post_logout_redirect_uri=${encodeURIComponent(OAUTH_CONFIG.REDIRECT_URI)}` +
             `&id_token_hint=${result.data.idToken}`;
 
         if (loginHint)
