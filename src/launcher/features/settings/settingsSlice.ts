@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { type AccountInfo } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -30,7 +29,6 @@ export type State = {
     isRemoveArtifactoryTokenVisible: boolean;
     artifactoryTokenInformation?: TokenInformation;
     useChineseAppServer: boolean;
-    account?: AccountInfo;
 };
 
 const initialState: State = {
@@ -41,7 +39,6 @@ const initialState: State = {
     isRemoveArtifactoryTokenVisible: false,
     artifactoryTokenInformation: getPersistedArtifactoryTokenInformation(),
     useChineseAppServer: getPersistedUseChineseAppServer(),
-    account: undefined,
 };
 
 const slice = createSlice({
@@ -95,12 +92,6 @@ const slice = createSlice({
             state.useChineseAppServer = useChineseAppServer;
             setPersistedUseChineseAppServer(useChineseAppServer);
         },
-        setAccount(state, { payload: account }: PayloadAction<AccountInfo>) {
-            state.account = account;
-        },
-        clearAccount(state) {
-            state.account = undefined;
-        },
     },
 });
 
@@ -118,8 +109,6 @@ export const {
     showAddArtifactoryToken,
     showRemoveArtifactoryToken,
     showUpdateCheckComplete,
-    setAccount,
-    clearAccount,
 } = slice.actions;
 
 export const getShouldCheckForUpdatesAtStartup = (state: RootState) =>
@@ -136,4 +125,3 @@ export const getIsRemoveArtifactoryTokenVisible = (state: RootState) =>
     state.settings.isRemoveArtifactoryTokenVisible;
 export const getUseChineseAppServer = (state: RootState) =>
     state.settings.useChineseAppServer;
-export const getAccount = (state: RootState) => state.settings.account;
