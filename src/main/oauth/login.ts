@@ -127,7 +127,7 @@ export const completeOauthLogin = async (
     const state = params.get('state');
     if (!state) return;
 
-    // Непознат/stale state -> не е нашият активен login (или е settle-нат) -> игнор.
+    // Unknown/stale state -> not our active login (or already settled) -> ignore.
     if (!activeLogin || activeLogin.state !== state) return;
 
     const { initiatingWindow, codeVerifier } = activeLogin;
