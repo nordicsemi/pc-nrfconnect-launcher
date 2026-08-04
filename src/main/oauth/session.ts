@@ -17,43 +17,8 @@ import {
 import { shell } from 'electron';
 
 import { clearMsalCache } from '../../common/persistedStore';
-import { logger } from '../log';
 import { getPca, OAUTH_CONFIG } from './config';
 import { getLastAuthState, notifyAuthStateChanged } from './helpers';
-
-export const registerSession = async (
-    authResult: AuthenticationResult,
-): Promise<void> => {
-    const claims = authResult.idTokenClaims as {
-        sid?: string;
-        oid?: string;
-    };
-
-    const res = await fetch(
-        `${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/register`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${authResult.accessToken}`,
-                'Ocp-Apim-Subscription-Key': OAUTH_CONFIG.APIM_SUBSCRIPTION_KEY,
-            },
-            body: JSON.stringify({
-                sid: claims.sid,
-                oid: claims.oid,
-                source: OAUTH_CONFIG.SOURCE,
-            }),
-        },
-    );
-
-    if (!res.ok) {
-        logger.warn(
-            `Session register failed: ${res.status}, errorId=${res.headers.get(
-                'x-error-id',
-            )}`,
-        );
-    }
-};
 
 export const getAuthStatus = async (): Promise<AuthState> => {
     const last = getLastAuthState();
@@ -143,38 +108,6 @@ export const getIdTokenSilently = async (
     return result.status ? { status: true, data: result.data.idToken } : result;
 };
 
-export const validateSession = async (): Promise<
-    GenericAuthResult<'validated' | 'invalidated' | 'invalid'>
-> => {
-    const result = await acquireToken();
-    if (!result.status) return { status: false, error: result.error };
-
-    try {
-        const res = await fetch(
-            `${OAUTH_CONFIG.SLO_BASE_URL}/extauth/session`,
-            {
-                headers: {
-                    Authorization: `Bearer ${result.data.accessToken}`,
-                    'Ocp-Apim-Subscription-Key':
-                        OAUTH_CONFIG.APIM_SUBSCRIPTION_KEY,
-                },
-            },
-        );
-        const header = res.headers.get('x-session-status');
-        if (res.status === 200 && header === 'validated')
-            return { status: true, data: 'validated' };
-        if (res.status === 401 || header === 'invalidated') {
-            await removeLocalSessions(); // If the server session is invalidated somewhere else
-            return { status: true, data: 'invalidated' };
-        }
-        await removeLocalSessions();
-        return { status: true, data: 'invalid' };
-    } catch {
-        // inconclusive due to network error or temporary service issue, do not log out the user
-        return { status: false, error: 'Session check inconclusive' };
-    }
-};
-
 const removeLocalSessions = async (): Promise<GenericAuthResult<null>> => {
     const cache = getPca().getTokenCache();
     const accounts = await cache.getAllAccounts();
@@ -199,21 +132,12 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
             await removeLocalSessions();
             return { status: true, data: null };
         }
-        const { accessToken, idTokenClaims } = result.data;
+        const { idTokenClaims } = result.data;
         const claims = idTokenClaims as { sid?: string; login_hint?: string };
-        const sid = claims.sid;
         const loginHint = claims.login_hint;
 
         // 2. Revoke server-side session first
-        await fetch(`${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/logout`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-                'Ocp-Apim-Subscription-Key': OAUTH_CONFIG.APIM_SUBSCRIPTION_KEY,
-            },
-            body: JSON.stringify({ sid }), // { signedOut: true }
-        });
+        // This step is skipped for now
 
         // 3. Now clear local MSAL cache
         await removeLocalSessions();

@@ -34,7 +34,6 @@ import { chmodDir } from './fileUtil';
 import { logger } from './log';
 import menu from './menu';
 import { ensureDirExists } from './mkdir';
-import { triggerAuthValidate } from './oauth/sessionMonitor';
 import {
     openDownloadableAppWindow,
     openLauncherWindow,
@@ -132,7 +131,6 @@ export default () => {
             await initAppsDirectory();
             await initNrfutil();
             openInitialWindow();
-            triggerAuthValidate();
         } catch (error) {
             fatalError(error);
         }
@@ -149,9 +147,5 @@ export default () => {
 
     app.on('window-all-closed', () => {
         app.quit();
-    });
-
-    app.on('browser-window-focus', () => {
-        triggerAuthValidate();
     });
 };

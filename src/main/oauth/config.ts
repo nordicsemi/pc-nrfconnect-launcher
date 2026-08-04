@@ -26,8 +26,6 @@ export const OAUTH_CONFIG = {
     LOGIN_TIMEOUT_MS: 10 * 60 * 1000,
     MYNORDIC_AUTH_ENTRY_URL:
         'https://mynordic.nordicsemi.com/en/sign-up/create-account',
-    SLO_BASE_URL: 'https://apim-mynordic-prod.azure-api.net/slo/api/v2',
-    APIM_SUBSCRIPTION_KEY: 'ee0296bb78ff45d78eb4f6619bb5d4d4',
     USE_MYNORDIC_FLOW: true, // Default = true. Set to false to use the Entra flow directly, instead of the MyNordic flow.
 };
 
