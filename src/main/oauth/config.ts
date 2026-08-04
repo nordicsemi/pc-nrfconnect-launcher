@@ -23,7 +23,7 @@ export const OAUTH_CONFIG = {
     SOURCE: 'nrfconnectfordesktop',
     RESPONSE_TYPE: 'code',
     PROMPT: 'login',
-    LOGIN_TIMEOUT_MS: 10 * 60 * 1000,
+    SIGNIN_TIMEOUT_MS: 10 * 60 * 1000,
     MYNORDIC_AUTH_ENTRY_URL:
         'https://mynordic.nordicsemi.com/en/sign-up/create-account',
     USE_MYNORDIC_FLOW: true, // Default = true. Set to false to use the Entra flow directly, instead of the MyNordic flow.

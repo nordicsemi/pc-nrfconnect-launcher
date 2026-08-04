@@ -7,7 +7,7 @@
 import { app } from 'electron';
 
 import { logger } from '../log';
-import { completeOauthLogin } from '../oauth/login';
+import { completeOauthSignIn } from '../oauth/login';
 import { handleOpenAppDeepLink } from './handlers/appsHandler';
 
 export const DEEPLINK_SCHEME = 'nrfconnectfordesktop';
@@ -21,7 +21,7 @@ const routes: { match: (u: URL) => boolean; handle: (u: URL) => unknown }[] = [
     },
     {
         match: u => u.host === 'my-nordic' && u.pathname === '/auth/callback',
-        handle: u => completeOauthLogin(u.toString()),
+        handle: u => completeOauthSignIn(u.toString()),
     },
 ];
 

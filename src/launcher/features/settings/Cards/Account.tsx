@@ -15,7 +15,7 @@ import { useLauncherDispatch } from '../../../util/hooks';
 import Card from '../../layout/Card';
 import Col from '../../layout/Col';
 import Row from '../../layout/Row';
-import { logIn, logOut } from '../settingsEffects';
+import { signIn, signOut } from '../settingsEffects';
 
 export default () => {
     const dispatch = useLauncherDispatch();
@@ -33,7 +33,7 @@ export default () => {
     const showAccountView = status === 'signedIn' || status === 'signingOut';
 
     const signInLabel = () => {
-        if (status === 'signingIn') return 'Logging in…';
+        if (status === 'signingIn') return 'Signing in…';
         if (status === 'interactionRequired') return 'Sign in again';
         return 'Sign in';
     };
@@ -42,15 +42,15 @@ export default () => {
         <Button
             variant="outline-secondary"
             disabled={status === 'signingOut'}
-            onClick={() => dispatch(logOut())}
+            onClick={() => dispatch(signOut())}
         >
-            {status === 'signingOut' ? 'Signing out…' : 'Log out'}
+            {status === 'signingOut' ? 'Signing out…' : 'Sign out'}
         </Button>
     ) : (
         <Button
             variant="outline-primary"
             disabled={status === 'signingIn'}
-            onClick={() => dispatch(logIn())}
+            onClick={() => dispatch(signIn())}
         >
             {signInLabel()}
         </Button>
@@ -62,11 +62,11 @@ export default () => {
             return name
                 ? `Your session for ${name} expired. Please sign in again.`
                 : 'Your session expired. Please sign in again.';
-        return 'Sign in with your My Nordic account.';
+        return 'Sign in with myNordic account.';
     };
 
     return (
-        <Card title="My Nordic account" titleButton={button}>
+        <Card title="myNordic account" titleButton={button}>
             <Row className="tw-mt-4">
                 <Col className="tw-text-sm tw-text-gray-600">{body()}</Col>
             </Row>

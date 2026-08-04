@@ -112,7 +112,7 @@ exports[`SettingsView should render check for updates completed, with everything
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -132,7 +132,7 @@ exports[`SettingsView should render check for updates completed, with everything
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -465,7 +465,7 @@ exports[`SettingsView should render check for updates completed, with updates av
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -485,7 +485,7 @@ exports[`SettingsView should render check for updates completed, with updates av
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -816,7 +816,7 @@ exports[`SettingsView should render the token information 1`] = `
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -836,7 +836,7 @@ exports[`SettingsView should render the token information 1`] = `
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -1126,7 +1126,7 @@ exports[`SettingsView should render when checking for updates 1`] = `
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -1146,7 +1146,7 @@ exports[`SettingsView should render when checking for updates 1`] = `
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -1428,7 +1428,7 @@ exports[`SettingsView should render with check for updates disabled 1`] = `
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -1448,7 +1448,7 @@ exports[`SettingsView should render with check for updates disabled 1`] = `
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -1730,7 +1730,7 @@ exports[`SettingsView should render with check for updates enabled 1`] = `
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -1750,7 +1750,7 @@ exports[`SettingsView should render with check for updates enabled 1`] = `
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
@@ -2036,7 +2036,7 @@ exports[`SettingsView should render with last update check date 1`] = `
                 <h5
                   class="tw-mb-3 tw-font-normal"
                 >
-                  My Nordic account
+                  myNordic account
                 </h5>
               </div>
               <div
@@ -2056,7 +2056,7 @@ exports[`SettingsView should render with last update check date 1`] = `
               <div
                 class="tw-flex-1 tw-px-4 tw-text-sm tw-text-gray-600"
               >
-                Sign in with your My Nordic account.
+                Sign in with myNordic account.
               </div>
             </div>
           </div>
