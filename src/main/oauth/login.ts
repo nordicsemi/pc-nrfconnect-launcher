@@ -11,7 +11,7 @@ import { BrowserWindow, shell } from 'electron';
 import { focusWindow } from '../windows';
 import { getPca, OAUTH_CONFIG } from './config';
 import { notifyAuthStateChanged } from './helpers';
-import { getActiveAccountInfo, registerSession } from './session';
+import { getActiveAccountInfo } from './session';
 
 const crypto = new CryptoProvider();
 
@@ -144,13 +144,12 @@ export const completeOauthLogin = async (
     }
 
     try {
-        const tokenResult = await getPca().acquireTokenByCode({
+        await getPca().acquireTokenByCode({
             code,
             scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
             redirectUri: OAUTH_CONFIG.REDIRECT_URI,
             codeVerifier,
         });
-        await registerSession(tokenResult);
 
         if (initiatingWindow && !initiatingWindow.isDestroyed()) {
             focusWindow(initiatingWindow);
