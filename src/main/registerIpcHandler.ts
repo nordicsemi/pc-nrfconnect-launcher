@@ -55,7 +55,7 @@ import {
     setUseChineseUpdateServer,
     startUpdate,
 } from './launcherUpdate';
-import { startOauthLogin } from './oauth/login';
+import { startOauthSignIn } from './oauth/login';
 import {
     getAccessTokenSilently,
     getAuthStatus,
@@ -164,7 +164,7 @@ export default () => {
     jlink.forRenderer.registerInstallJLink(installJLink);
 
     auth.forRenderer.registerGetAuthStatus(getAuthStatus);
-    auth.forRenderer.registerStartLogin(startOauthLogin);
+    auth.forRenderer.registerStartSignIn(startOauthSignIn);
     auth.forRenderer.registerSingleSignOut(singleSignOut);
     auth.forRenderer.registerGetIdToken(getIdTokenSilently);
     auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);

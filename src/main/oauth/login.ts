@@ -15,7 +15,7 @@ import { getActiveAccountInfo } from './session';
 
 const crypto = new CryptoProvider();
 
-interface ActiveLogin {
+interface ActiveSignIn {
     promise: Promise<GenericAuthResult<null>>;
     resolve: (result: GenericAuthResult<null>) => void;
     state: string;
@@ -25,13 +25,13 @@ interface ActiveLogin {
     authUrl?: string;
 }
 
-let activeLogin: ActiveLogin | null = null;
+let activeSignIn: ActiveSignIn | null = null;
 
-const finishLogin = (state: string, result: GenericAuthResult<null>) => {
-    if (!activeLogin || activeLogin.state !== state) return;
-    clearTimeout(activeLogin.timeoutId);
-    const { resolve } = activeLogin;
-    activeLogin = null;
+const finishSignIn = (state: string, result: GenericAuthResult<null>) => {
+    if (!activeSignIn || activeSignIn.state !== state) return;
+    clearTimeout(activeSignIn.timeoutId);
+    const { resolve } = activeSignIn;
+    activeSignIn = null;
     resolve(result);
 
     getActiveAccountInfo().then(account =>
@@ -42,13 +42,13 @@ const finishLogin = (state: string, result: GenericAuthResult<null>) => {
     );
 };
 
-export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
-    if (activeLogin) {
-        activeLogin.initiatingWindow = BrowserWindow.getFocusedWindow();
-        if (activeLogin.authUrl)
-            shell.openExternal(activeLogin.authUrl).catch(() => {});
+export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
+    if (activeSignIn) {
+        activeSignIn.initiatingWindow = BrowserWindow.getFocusedWindow();
+        if (activeSignIn.authUrl)
+            shell.openExternal(activeSignIn.authUrl).catch(() => {});
 
-        return activeLogin.promise;
+        return activeSignIn.promise;
     }
 
     notifyAuthStateChanged({ status: 'signingIn' });
@@ -61,11 +61,12 @@ export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
     });
 
     const timeoutId = setTimeout(
-        () => finishLogin(state, { status: false, error: 'Login timed out' }),
-        OAUTH_CONFIG.LOGIN_TIMEOUT_MS,
+        () =>
+            finishSignIn(state, { status: false, error: 'Sign in timed out' }),
+        OAUTH_CONFIG.SIGNIN_TIMEOUT_MS,
     );
 
-    activeLogin = {
+    activeSignIn = {
         promise,
         resolve: resolveFn,
         state,
@@ -79,8 +80,8 @@ export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
             const { verifier, challenge } = await crypto.generatePkceCodes();
             const nonce = crypto.createNewGuid();
 
-            if (!activeLogin || activeLogin.state !== state) return;
-            activeLogin.codeVerifier = verifier;
+            if (!activeSignIn || activeSignIn.state !== state) return;
+            activeSignIn.codeVerifier = verifier;
 
             const url = await getPca().getAuthCodeUrl({
                 scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
@@ -103,15 +104,15 @@ export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
             entraAuthUrl.searchParams.forEach((value, key) => {
                 myNordicUrl.searchParams.set(key, value);
             });
-            activeLogin.authUrl = OAUTH_CONFIG.USE_MYNORDIC_FLOW
+            activeSignIn.authUrl = OAUTH_CONFIG.USE_MYNORDIC_FLOW
                 ? myNordicUrl.toString()
                 : entraAuthUrl.toString();
 
-            await shell.openExternal(activeLogin.authUrl);
+            await shell.openExternal(activeSignIn.authUrl);
         } catch (err) {
-            finishLogin(state, {
+            finishSignIn(state, {
                 status: false,
-                error: `Could not start login: ${err}`,
+                error: `Could not start sign in: ${err}`,
             });
         }
     })();
@@ -120,23 +121,23 @@ export const startOauthLogin = (): Promise<GenericAuthResult<null>> => {
 };
 
 // Called from deep link handler when the auth provider redirects back with the code (or error).
-export const completeOauthLogin = async (
+export const completeOauthSignIn = async (
     callbackUrl: string,
 ): Promise<void> => {
     const params = new URL(callbackUrl).searchParams;
     const state = params.get('state');
     if (!state) return;
 
-    // Unknown/stale state -> not our active login (or already settled) -> ignore.
-    if (!activeLogin || activeLogin.state !== state) return;
+    // Unknown/stale state -> not our active sign in (or already settled) -> ignore.
+    if (!activeSignIn || activeSignIn.state !== state) return;
 
-    const { initiatingWindow, codeVerifier } = activeLogin;
+    const { initiatingWindow, codeVerifier } = activeSignIn;
 
     const code = params.get('code');
     const errorParam = params.get('error_description') ?? params.get('error');
 
     if (errorParam || !code) {
-        finishLogin(state, {
+        finishSignIn(state, {
             status: false,
             error: errorParam ?? 'No authorization code',
         });
@@ -155,8 +156,8 @@ export const completeOauthLogin = async (
             focusWindow(initiatingWindow);
         }
 
-        finishLogin(state, { status: true, data: null });
+        finishSignIn(state, { status: true, data: null });
     } catch (err) {
-        finishLogin(state, { status: false, error: String(err) });
+        finishSignIn(state, { status: false, error: String(err) });
     }
 };

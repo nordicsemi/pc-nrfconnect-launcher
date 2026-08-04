@@ -34,23 +34,25 @@ export const setArtifactoryToken =
         dispatch(setArtifactoryTokenInformation(tokenInformation));
     };
 
-export const logIn = (): AppThunk => async dispatch => {
+export const signIn = (): AppThunk => async dispatch => {
     try {
-        const result = await auth.startLogin();
+        const result = await auth.startSignIn();
         if (!result.status) {
             dispatch(
-                ErrorDialogActions.showDialog(`Login failed: ${result.error}`),
+                ErrorDialogActions.showDialog(
+                    `Sign in failed: ${result.error}`,
+                ),
             );
         }
     } catch (error) {
         dispatch(
             ErrorDialogActions.showDialog(
-                `Login failed: ${cleanIpcErrorMessage(describeError(error))}`,
+                `Sign in failed: ${cleanIpcErrorMessage(describeError(error))}`,
             ),
         );
     }
 };
 
-export const logOut = (): AppThunk => async () => {
+export const signOut = (): AppThunk => async () => {
     await auth.singleSignOut();
 };

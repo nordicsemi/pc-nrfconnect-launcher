@@ -35,7 +35,7 @@ jest.mock('@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth', () => ({
     inMain: {
         getAuthStatus: jest.fn().mockResolvedValue({ status: 'signedOut' }),
         registerOnStateChanged: jest.fn(),
-        startLogin: jest.fn(),
+        startSignIn: jest.fn(),
         singleSignOut: jest
             .fn()
             .mockResolvedValue({ status: true, data: null }),
@@ -47,7 +47,7 @@ describe('SettingsView', () => {
         const { baseElement } = render(<Settings />, [
             setCheckForUpdatesAtStartup(true),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -55,7 +55,7 @@ describe('SettingsView', () => {
         const { baseElement } = render(<Settings />, [
             setCheckForUpdatesAtStartup(false),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -63,7 +63,7 @@ describe('SettingsView', () => {
         const { baseElement } = render(<Settings />, [
             updateDownloadableAppInfosStarted(),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -71,7 +71,7 @@ describe('SettingsView', () => {
         const { baseElement } = render(<Settings />, [
             updateDownloadableAppInfosSuccess(new Date(2017, 1, 3, 13, 41, 36)),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -85,7 +85,7 @@ describe('SettingsView', () => {
                 }),
             ]),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -94,7 +94,7 @@ describe('SettingsView', () => {
             showUpdateCheckComplete(),
             addDownloadableApps([createDownloadableTestApp()]),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 
@@ -106,7 +106,7 @@ describe('SettingsView', () => {
                 token_id: 'an_id',
             }),
         ]);
-        await screen.findByText('My Nordic account');
+        await screen.findByText('myNordic account');
         expect(baseElement).toMatchSnapshot();
     });
 });
