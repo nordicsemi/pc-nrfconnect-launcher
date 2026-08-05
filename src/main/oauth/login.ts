@@ -16,11 +16,11 @@ import { getActiveAccountInfo } from './session';
 const crypto = new CryptoProvider();
 
 interface ActiveSignIn {
-    promise: Promise<GenericAuthResult<null>>;
-    resolve: (result: GenericAuthResult<null>) => void;
-    state: string;
-    codeVerifier: string;
-    timeoutId: NodeJS.Timeout;
+    resultPromise: Promise<GenericAuthResult<null>>;
+    reportResult: (result: GenericAuthResult<null>) => void;
+    oauthState: string;
+    pkceCodeVerifier: string;
+    finishLoginTimeoutId: NodeJS.Timeout;
     initiatingWindow: BrowserWindow | null;
     authUrl?: string;
 }
@@ -28,11 +28,11 @@ interface ActiveSignIn {
 let activeSignIn: ActiveSignIn | null = null;
 
 const finishSignIn = (state: string, result: GenericAuthResult<null>) => {
-    if (!activeSignIn || activeSignIn.state !== state) return;
-    clearTimeout(activeSignIn.timeoutId);
-    const { resolve } = activeSignIn;
+    if (!activeSignIn || activeSignIn.oauthState !== state) return;
+    clearTimeout(activeSignIn.finishLoginTimeoutId);
+    const { reportResult } = activeSignIn;
     activeSignIn = null;
-    resolve(result);
+    reportResult(result);
 
     getActiveAccountInfo().then(account =>
         notifyAuthStateChanged({
@@ -48,30 +48,30 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
         if (activeSignIn.authUrl)
             shell.openExternal(activeSignIn.authUrl).catch(() => {});
 
-        return activeSignIn.promise;
+        return activeSignIn.resultPromise;
     }
 
     notifyAuthStateChanged({ status: 'signingIn' });
 
     const state = crypto.createNewGuid();
 
-    let resolveFn!: (result: GenericAuthResult<null>) => void;
-    const promise = new Promise<GenericAuthResult<null>>(resolve => {
-        resolveFn = resolve;
+    let reportResultFn!: (result: GenericAuthResult<null>) => void;
+    const resultPromise = new Promise<GenericAuthResult<null>>(resolve => {
+        reportResultFn = resolve;
     });
 
-    const timeoutId = setTimeout(
+    const finishLoginTimeoutId = setTimeout(
         () =>
             finishSignIn(state, { status: false, error: 'Sign in timed out' }),
         OAUTH_CONFIG.SIGNIN_TIMEOUT_MS,
     );
 
     activeSignIn = {
-        promise,
-        resolve: resolveFn,
-        state,
-        codeVerifier: '',
-        timeoutId,
+        resultPromise,
+        reportResult: reportResultFn,
+        oauthState: state,
+        pkceCodeVerifier: '',
+        finishLoginTimeoutId,
         initiatingWindow: BrowserWindow.getFocusedWindow(),
     };
 
@@ -80,8 +80,8 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
             const { verifier, challenge } = await crypto.generatePkceCodes();
             const nonce = crypto.createNewGuid();
 
-            if (!activeSignIn || activeSignIn.state !== state) return;
-            activeSignIn.codeVerifier = verifier;
+            if (!activeSignIn || activeSignIn.oauthState !== state) return;
+            activeSignIn.pkceCodeVerifier = verifier;
 
             const url = await getPca().getAuthCodeUrl({
                 scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
@@ -117,7 +117,7 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
         }
     })();
 
-    return promise;
+    return resultPromise;
 };
 
 // Called from deep link handler when the auth provider redirects back with the code (or error).
@@ -129,9 +129,9 @@ export const completeOauthSignIn = async (
     if (!state) return;
 
     // Unknown/stale state -> not our active sign in (or already settled) -> ignore.
-    if (!activeSignIn || activeSignIn.state !== state) return;
+    if (!activeSignIn || activeSignIn.oauthState !== state) return;
 
-    const { initiatingWindow, codeVerifier } = activeSignIn;
+    const { initiatingWindow, pkceCodeVerifier } = activeSignIn;
 
     const code = params.get('code');
     const errorParam = params.get('error_description') ?? params.get('error');
@@ -149,7 +149,7 @@ export const completeOauthSignIn = async (
             code,
             scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
             redirectUri: OAUTH_CONFIG.REDIRECT_URI,
-            codeVerifier,
+            codeVerifier: pkceCodeVerifier,
         });
 
         if (initiatingWindow && !initiatingWindow.isDestroyed()) {
