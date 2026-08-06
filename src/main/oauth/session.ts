@@ -17,8 +17,38 @@ import {
 import { shell } from 'electron';
 
 import { clearMsalCache } from '../../common/persistedStore';
+import { logger } from '../log';
 import { getPca, OAUTH_CONFIG } from './config';
 import { getLastAuthState, notifyAuthStateChanged } from './helpers';
+
+export const registerSession = async (
+    authResult: AuthenticationResult,
+): Promise<void> => {
+    const claims = authResult.idTokenClaims as { sid?: string; oid?: string };
+
+    const res = await fetch(
+        `${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/register`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authResult.accessToken}`,
+            },
+            body: JSON.stringify({
+                sid: claims.sid,
+                oid: claims.oid,
+                source: OAUTH_CONFIG.SOURCE,
+            }),
+        },
+    );
+
+    if (!res.ok)
+        logger.warn(
+            `Session register failed: ${res.status}, errorId=${res.headers.get(
+                'x-error-id',
+            )}`,
+        );
+};
 
 export const getAuthStatus = async (): Promise<AuthState> => {
     const last = getLastAuthState();
@@ -117,6 +147,36 @@ const removeLocalSessions = async (): Promise<GenericAuthResult<null>> => {
     return { status: true, data: null };
 };
 
+export const validateSession = async (): Promise<
+    GenericAuthResult<'validated' | 'invalidated' | 'invalid'>
+> => {
+    const result = await acquireToken();
+    if (!result.status) return { status: false, error: result.error };
+
+    try {
+        const res = await fetch(
+            `${OAUTH_CONFIG.SLO_BASE_URL}/extauth/session`,
+            {
+                headers: {
+                    Authorization: `Bearer ${result.data.accessToken}`,
+                },
+            },
+        );
+        const header = res.headers.get('x-session-status');
+        if (res.status === 200 && header === 'validated')
+            return { status: true, data: 'validated' };
+        if (res.status === 401 || header === 'invalidated') {
+            await removeLocalSessions(); // If the server session is invalidated somewhere else
+            return { status: true, data: 'invalidated' };
+        }
+        await removeLocalSessions();
+        return { status: true, data: 'invalid' };
+    } catch {
+        // inconclusive due to network error or temporary service issue, do not log out the user
+        return { status: false, error: 'Session check inconclusive' };
+    }
+};
+
 export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
     try {
         const account = await getActiveAccountInfo();
@@ -132,14 +192,22 @@ export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
             await removeLocalSessions();
             return { status: true, data: null };
         }
-        const { idTokenClaims } = result.data;
+        const { accessToken, idTokenClaims } = result.data;
         const claims = idTokenClaims as { sid?: string; login_hint?: string };
         const loginHint = claims.login_hint;
+        const sid = claims.sid;
 
         // 2. Revoke server-side session first
-        // This step is skipped for now
+        await fetch(`${OAUTH_CONFIG.SLO_BASE_URL}/auth/sessions/logout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ sid }),
+        });
 
-        // 3. Now clear local MSAL cache
+        // 3. Clear local MSAL cache
         await removeLocalSessions();
 
         // 4. Redirect to Entra to clear the SSO cookie as well
