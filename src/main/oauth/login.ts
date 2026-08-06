@@ -11,7 +11,7 @@ import { BrowserWindow, shell } from 'electron';
 import { focusWindow } from '../windows';
 import { getPca, OAUTH_CONFIG } from './config';
 import { notifyAuthStateChanged } from './helpers';
-import { getActiveAccountInfo } from './session';
+import { getActiveAccountInfo, registerSession } from './session';
 
 const crypto = new CryptoProvider();
 
@@ -23,6 +23,7 @@ interface ActiveSignIn {
     finishLoginTimeoutId: NodeJS.Timeout;
     initiatingWindow: BrowserWindow | null;
     authUrl?: string;
+    redeemingCode?: boolean;
 }
 
 let activeSignIn: ActiveSignIn | null = null;
@@ -129,7 +130,14 @@ export const completeOauthSignIn = async (
     if (!state) return;
 
     // Unknown/stale state -> not our active sign in (or already settled) -> ignore.
-    if (!activeSignIn || activeSignIn.oauthState !== state) return;
+    if (
+        !activeSignIn ||
+        activeSignIn.oauthState !== state ||
+        activeSignIn.redeemingCode
+    ) {
+        return;
+    }
+    activeSignIn.redeemingCode = true;
 
     const { initiatingWindow, pkceCodeVerifier } = activeSignIn;
 
@@ -145,12 +153,13 @@ export const completeOauthSignIn = async (
     }
 
     try {
-        await getPca().acquireTokenByCode({
+        const tokenResult = await getPca().acquireTokenByCode({
             code,
             scopes: OAUTH_CONFIG.DEFAULT_SCOPES,
             redirectUri: OAUTH_CONFIG.REDIRECT_URI,
             codeVerifier: pkceCodeVerifier,
         });
+        await registerSession(tokenResult);
 
         if (initiatingWindow && !initiatingWindow.isDestroyed()) {
             focusWindow(initiatingWindow);
