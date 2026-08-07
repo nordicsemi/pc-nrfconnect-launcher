@@ -1,8 +1,9 @@
+
 ## Unreleased
 
 ### Added
 
-- Updating of apps when clicking **Open** (for apps that enable this flow).
+- Sign in with a myNordic account.
 
 ## 5.3.2 - 2026-07-07
 
