@@ -1,3 +1,9 @@
+## 5.4.0 - Unreleased
+
+## Added
+
+- Sign in with a myNordic account.
+
 ## 5.3.2 - 2026-07-07
 
 ### Fixed
