@@ -121,6 +121,22 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
     return resultPromise;
 };
 
+export const cancelOauthSignIn = (): GenericAuthResult<null> => {
+    if (!activeSignIn)
+        return { status: false, error: 'No sign-in in progress' };
+
+    // Too late to cancel if the code is already being redeemed (otherwise we risk
+    // "cancelled" UI, but a valid token in the cache).
+    if (activeSignIn.redeemingCode)
+        return { status: false, error: 'Sign-in is completing' };
+
+    finishSignIn(activeSignIn.oauthState, {
+        status: false,
+        error: 'Sign-in cancelled',
+    });
+    return { status: true, data: null };
+};
+
 // Called from deep link handler when the auth provider redirects back with the code (or error).
 export const completeOauthSignIn = async (
     callbackUrl: string,
