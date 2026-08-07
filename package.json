@@ -116,7 +116,7 @@
         "@cyclonedx/cyclonedx-npm": "^4.2.1",
         "@electron/notarize": "^2.2.0",
         "@nordicsemiconductor/nrf-jlink-js": "^1.0.0",
-        "@nordicsemiconductor/pc-nrfconnect-shared": "^244.0.0",
+        "@nordicsemiconductor/pc-nrfconnect-shared": "github:nordicsemi/pc-nrfconnect-shared#feat/auth-ipc",
         "@playwright/test": "^1.16.3",
         "@testing-library/user-event": "^14.4.3",
         "@types/chmodr": "1.0.0",
@@ -134,6 +134,7 @@
         "xvfb-maybe": "0.2.1"
     },
     "dependencies": {
+        "@azure/msal-node": "^5.3.1",
         "@electron/remote": "^2.1.2",
         "axios": "0.22.0",
         "chmodr": "1.2.0",

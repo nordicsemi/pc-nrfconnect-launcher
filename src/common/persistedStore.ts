@@ -43,6 +43,7 @@ interface Schema {
     doNotRemindOnMissingToken?: boolean;
     useChineseAppServer?: boolean;
     updateChannel?: string;
+    encryptedMsalCache?: string;
 }
 
 const store = new Store<Schema>();
@@ -152,3 +153,8 @@ export const setUseChineseAppServer = (useChineseAppServer: boolean) =>
     store.set('useChineseAppServer', useChineseAppServer);
 
 export const getUpdateChannel = () => store.get('updateChannel');
+
+export const getEncryptedMsalCache = () => store.get('encryptedMsalCache');
+export const setEncryptedMsalCache = (value: string) =>
+    store.set('encryptedMsalCache', value);
+export const clearMsalCache = () => store.delete('encryptedMsalCache');

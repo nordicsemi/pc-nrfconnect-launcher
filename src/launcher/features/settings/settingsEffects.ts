@@ -8,6 +8,7 @@ import {
     describeError,
     ErrorDialogActions,
 } from '@nordicsemiconductor/pc-nrfconnect-shared';
+import { inMain as auth } from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 
 import cleanIpcErrorMessage from '../../../common/cleanIpcErrorMessage';
 import { inMain as artifactoryToken } from '../../../ipc/artifactoryToken';
@@ -32,3 +33,26 @@ export const setArtifactoryToken =
         }
         dispatch(setArtifactoryTokenInformation(tokenInformation));
     };
+
+export const signIn = (): AppThunk => async dispatch => {
+    try {
+        const result = await auth.startSignIn();
+        if (!result.status) {
+            dispatch(
+                ErrorDialogActions.showDialog(
+                    `Sign in failed: ${result.error}`,
+                ),
+            );
+        }
+    } catch (error) {
+        dispatch(
+            ErrorDialogActions.showDialog(
+                `Sign in failed: ${cleanIpcErrorMessage(describeError(error))}`,
+            ),
+        );
+    }
+};
+
+export const signOut = (): AppThunk => async () => {
+    await auth.singleSignOut();
+};
