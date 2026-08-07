@@ -1,6 +1,6 @@
 {
     "name": "nrfconnect",
-    "version": "5.3.2",
+    "version": "5.4.0",
     "description": "nRF Connect for Desktop",
     "repository": {
         "type": "git",
@@ -10,7 +10,7 @@
     "scripts": {
         "prepare": "husky install",
         "app": "cross-env NODE_OPTIONS=--enable-source-maps electron .",
-        "app:debug": "cross-env NODE_OPTIONS=--enable-source-maps electron --remote-debugging-port=9223 .",
+        "app:debug": "cross-env NODE_OPTIONS=--enable-source-maps electron . --remote-debugging-port=9223",
         "watch:build": "run-p --silent --continue-on-error --print-label watch:build:*",
         "watch:build:main": "tsx scripts/esbuild --watch",
         "watch:build:renderer": "tsx scripts/esbuild-renderer --watch",
@@ -116,7 +116,7 @@
         "@cyclonedx/cyclonedx-npm": "^4.2.1",
         "@electron/notarize": "^2.2.0",
         "@nordicsemiconductor/nrf-jlink-js": "^1.0.0",
-        "@nordicsemiconductor/pc-nrfconnect-shared": "github:nordicsemi/pc-nrfconnect-shared#feat/auth-ipc",
+        "@nordicsemiconductor/pc-nrfconnect-shared": "github:nordicsemi/pc-nrfconnect-shared#feat/cloud-quickstart-integration",
         "@playwright/test": "^1.16.3",
         "@testing-library/user-event": "^14.4.3",
         "@types/chmodr": "1.0.0",
