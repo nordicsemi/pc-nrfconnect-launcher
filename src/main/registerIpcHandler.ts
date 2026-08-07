@@ -54,7 +54,7 @@ import {
     setUseChineseUpdateServer,
     startUpdate,
 } from './launcherUpdate';
-import { startOauthSignIn } from './oauth/login';
+import { cancelOauthSignIn, startOauthSignIn } from './oauth/login';
 import {
     getAccessTokenSilently,
     getAuthStatus,
@@ -163,6 +163,7 @@ export default () => {
 
     auth.forRenderer.registerGetAuthStatus(getAuthStatus);
     auth.forRenderer.registerStartSignIn(startOauthSignIn);
+    auth.forRenderer.registerCancelSignIn(cancelOauthSignIn);
     auth.forRenderer.registerSingleSignOut(singleSignOut);
     auth.forRenderer.registerGetIdToken(getIdTokenSilently);
     auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);

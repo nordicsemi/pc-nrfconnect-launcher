@@ -38,7 +38,7 @@ export default () => {
         return 'Sign in';
     };
 
-    const button = showAccountView ? (
+    const buttons = showAccountView ? (
         <Button
             variant="outline-secondary"
             disabled={status === 'signingOut'}
@@ -47,13 +47,23 @@ export default () => {
             {status === 'signingOut' ? 'Signing out…' : 'Sign out'}
         </Button>
     ) : (
-        <Button
-            variant="outline-primary"
-            disabled={status === 'signingIn'}
-            onClick={() => dispatch(signIn())}
-        >
-            {signInLabel()}
-        </Button>
+        <div className="tw-flex tw-flex-row tw-gap-2">
+            <Button
+                variant="outline-primary"
+                disabled={status === 'signingIn'}
+                onClick={() => dispatch(signIn())}
+            >
+                {signInLabel()}
+            </Button>
+            {status === 'signingIn' && (
+                <Button
+                    variant="outline-secondary"
+                    onClick={() => auth.cancelSignIn()}
+                >
+                    Cancel
+                </Button>
+            )}
+        </div>
     );
 
     const body = () => {
@@ -66,7 +76,7 @@ export default () => {
     };
 
     return (
-        <Card title="myNordic account" titleButton={button}>
+        <Card title="myNordic account" titleButton={buttons}>
             <Row className="tw-mt-4">
                 <Col className="tw-text-sm tw-text-gray-600">{body()}</Col>
             </Row>

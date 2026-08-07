@@ -118,12 +118,16 @@ exports[`SettingsView should render check for updates completed, with everything
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -471,12 +475,16 @@ exports[`SettingsView should render check for updates completed, with updates av
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -822,12 +830,16 @@ exports[`SettingsView should render the token information 1`] = `
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -1132,12 +1144,16 @@ exports[`SettingsView should render when checking for updates 1`] = `
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -1434,12 +1450,16 @@ exports[`SettingsView should render with check for updates disabled 1`] = `
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -1736,12 +1756,16 @@ exports[`SettingsView should render with check for updates enabled 1`] = `
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -2042,12 +2066,16 @@ exports[`SettingsView should render with last update check date 1`] = `
               <div
                 class="tw-w-auto tw-flex-none tw-px-4"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  type="button"
+                <div
+                  class="tw-flex tw-flex-row tw-gap-2"
                 >
-                  Sign in
-                </button>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
             </div>
             <div
