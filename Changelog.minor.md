@@ -22,7 +22,7 @@ release the new version.
 
 ## Added
 
-- Support for deep-links for opening apps.
+- Support for deep links for opening apps.
 
 ## 5.3.2
 
