@@ -63,7 +63,7 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
 
     const finishLoginTimeoutId = setTimeout(
         () =>
-            finishSignIn(state, { status: false, error: 'Sign in timed out' }),
+            finishSignIn(state, { status: false, error: 'Sign-in timed out' }),
         OAUTH_CONFIG.SIGNIN_TIMEOUT_MS,
     );
 
@@ -113,7 +113,7 @@ export const startOauthSignIn = (): Promise<GenericAuthResult<null>> => {
         } catch (err) {
             finishSignIn(state, {
                 status: false,
-                error: `Could not start sign in: ${err}`,
+                error: `Could not start sign-in: ${err}`,
             });
         }
     })();
@@ -128,7 +128,7 @@ export const cancelOauthSignIn = (): GenericAuthResult<null> => {
     // Too late to cancel if the code is already being redeemed (otherwise we risk
     // "cancelled" UI, but a valid token in the cache).
     if (activeSignIn.redeemingCode)
-        return { status: false, error: 'Sign-in is completing' };
+        return { status: false, error: 'Sign-in is about to complete' };
 
     finishSignIn(activeSignIn.oauthState, {
         status: false,

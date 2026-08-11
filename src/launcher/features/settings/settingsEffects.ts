@@ -40,14 +40,14 @@ export const signIn = (): AppThunk => async dispatch => {
         if (!result.status) {
             dispatch(
                 ErrorDialogActions.showDialog(
-                    `Sign in failed: ${result.error}`,
+                    `Sign-in failed: ${result.error}`,
                 ),
             );
         }
     } catch (error) {
         dispatch(
             ErrorDialogActions.showDialog(
-                `Sign in failed: ${cleanIpcErrorMessage(describeError(error))}`,
+                `Sign-in failed: ${cleanIpcErrorMessage(describeError(error))}`,
             ),
         );
     }

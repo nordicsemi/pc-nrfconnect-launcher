@@ -70,8 +70,8 @@ export default () => {
         if (showAccountView) return `Signed in as ${name}`;
         if (status === 'interactionRequired')
             return name
-                ? `Your session for ${name} expired. Please sign in again.`
-                : 'Your session expired. Please sign in again.';
+                ? `Your session for ${name} has expired. Sign in again.`
+                : 'Your session has expired. Sign in again.';
         return 'Sign in with myNordic account.';
     };
 
