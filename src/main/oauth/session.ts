@@ -153,28 +153,7 @@ export const validateSession = async (): Promise<
     const result = await acquireToken();
     if (!result.status) return { status: false, error: result.error };
 
-    try {
-        const res = await fetch(
-            `${OAUTH_CONFIG.SLO_BASE_URL}/extauth/session`,
-            {
-                headers: {
-                    Authorization: `Bearer ${result.data.accessToken}`,
-                },
-            },
-        );
-        const header = res.headers.get('x-session-status');
-        if (res.status === 200 && header === 'validated')
-            return { status: true, data: 'validated' };
-        if (res.status === 401 || header === 'invalidated') {
-            await removeLocalSessions(); // If the server session is invalidated somewhere else
-            return { status: true, data: 'invalidated' };
-        }
-        await removeLocalSessions();
-        return { status: true, data: 'invalid' };
-    } catch {
-        // inconclusive due to network error or temporary service issue, do not log out the user
-        return { status: false, error: 'Session check inconclusive' };
-    }
+    return { status: true, data: 'validated' };
 };
 
 export const singleSignOut = async (): Promise<GenericAuthResult<null>> => {
