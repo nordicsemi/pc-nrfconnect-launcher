@@ -108,7 +108,7 @@
         "@cyclonedx/cyclonedx-npm": "^4.2.1",
         "@electron/notarize": "^2.2.0",
         "@nordicsemiconductor/nrf-jlink-js": "^1.0.0",
-        "@nordicsemiconductor/pc-nrfconnect-shared": "^244.0.0",
+        "@nordicsemiconductor/pc-nrfconnect-shared": "^256.0.0",
         "@playwright/test": "^1.16.3",
         "@testing-library/user-event": "^14.4.3",
         "@types/chmodr": "1.0.0",
