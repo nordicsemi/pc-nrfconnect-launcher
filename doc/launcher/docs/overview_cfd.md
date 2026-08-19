@@ -61,7 +61,7 @@ This can be used for example to share early versions of applications under devel
 
 For some of these sources, you might need to request an identity token and add it in [Authentication](#authentication).
 
-### myNordic account linking
+### myNordic account
 
 Here you can log in to your [myNordic account](https://www.nordicsemi.com/Resources/myNordic) and link it to nRF Connect for Desktop. This allows you to use features requiring myNordic account and stay logged in across all nRF Connect for Desktop apps.
 
