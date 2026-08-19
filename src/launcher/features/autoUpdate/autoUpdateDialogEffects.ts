@@ -24,7 +24,7 @@ export const checkForUpdatableApps =
     async dispatch => {
         const autoUpdatingApps = appsToBeChecked
             .filter(isAutoUpdatingApp)
-            .filter(app => getAutoUpdateEnabled(app.name));
+            .filter(app => getAutoUpdateEnabled(app.name, app.source));
         if (autoUpdatingApps.length === 0) return [];
 
         const { apps: appsToBeUpdated } =

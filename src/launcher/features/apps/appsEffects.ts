@@ -154,6 +154,7 @@ const install =
         try {
             setAutoUpdateEnabled(
                 app.name,
+                app.source,
                 !version || version === app.latestVersion,
             );
             return appsInMain.installDownloadableApp(app, version);

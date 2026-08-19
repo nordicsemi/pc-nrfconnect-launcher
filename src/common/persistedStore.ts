@@ -154,7 +154,10 @@ export const setUseChineseAppServer = (useChineseAppServer: boolean) =>
 
 export const getUpdateChannel = () => store.get('updateChannel');
 
-export const getAutoUpdateEnabled = (app: string) =>
-    store.get(`autoUpdateEnabled.${app}`, true);
-export const setAutoUpdateEnabled = (app: string, enableAutoUpdate: boolean) =>
-    store.set(`autoUpdateEnabled.${app}`, enableAutoUpdate);
+export const getAutoUpdateEnabled = (app: string, source: string) =>
+    store.get(`autoUpdateEnabled.${source}.${app}`, true);
+export const setAutoUpdateEnabled = (
+    app: string,
+    source: string,
+    enableAutoUpdate: boolean,
+) => store.set(`autoUpdateEnabled.${source}.${app}`, enableAutoUpdate);
