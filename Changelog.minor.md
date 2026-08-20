@@ -20,10 +20,6 @@ release the new version.
   The update process triggers when clicking **Open**.
 - #1285: Removed use of axios at build time and now actually checks checksums.
 
-## Added
-
-- Support for deep links for opening apps.
-
 ## 5.3.2
 
 ### Fixed
