@@ -228,12 +228,17 @@ export const checkForAppsUpdate = async (apps: InstalledDownloadableApp[]) => {
         )
     )
         .filter(defined)
-        .filter(
-            app =>
-                app.latestVersion !==
-                mappedInstalledApps.get(`${app.source}/${app.name}`)
-                    ?.currentVersion,
-        );
+        .filter(app => {
+            const a = mappedInstalledApps.get(`${app.source}/${app.name}`);
+
+            const shaOfLatest = app.versions?.[app.latestVersion]?.shasum;
+            const shaOfInstalled = a?.installed.shasum;
+
+            return (
+                app.latestVersion !== a?.currentVersion ||
+                shaOfLatest !== shaOfInstalled
+            );
+        });
 
     return addInstalledAppDatas(downloadableApps);
 };
