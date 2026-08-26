@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
+import * as auth from '@nordicsemiconductor/pc-nrfconnect-shared/ipc/auth';
 import {
     appDetails,
     launcherConfig,
@@ -27,6 +28,7 @@ import * as artifactoryToken from '../ipc/artifactoryToken';
 import * as desktopShortcut from '../ipc/createDesktopShortcut';
 import * as jlink from '../ipc/jlink';
 import * as launcherUpdate from '../ipc/launcherUpdate';
+import * as openAppConfirmation from '../ipc/openAppConfirmation';
 import * as proxyLogin from '../ipc/proxyLogin';
 import * as sources from '../ipc/sources';
 import {
@@ -45,6 +47,7 @@ import createDesktopShortcut from './apps/createDesktopShortcut';
 import { addSource, removeSource } from './apps/sources/sourceChanges';
 import { getAllSources } from './apps/sources/sources';
 import { getTokenInformation, removeToken, setToken } from './artifactoryToken';
+import { answerOpenAppConfirmation } from './deepLink/openAppConfirmation';
 import { getJLinkState, installJLink } from './jlink';
 import {
     cancelUpdate,
@@ -52,6 +55,14 @@ import {
     setUseChineseUpdateServer,
     startUpdate,
 } from './launcherUpdate';
+import { cancelOauthSignIn, startOauthSignIn } from './oauth/login';
+import {
+    getAccessTokenSilently,
+    getAuthStatus,
+    getIdTokenSilently,
+    getProfileInfo,
+    singleSignOut,
+} from './oauth/session';
 import { openFile, openFileLocation, openUrl } from './open';
 import { callRegisteredCallback } from './proxyLogins';
 import {
@@ -111,6 +122,10 @@ export default () => {
         callRegisteredCallback,
     );
 
+    openAppConfirmation.forRenderer.registerAnswerOpenAppConfirmation(
+        answerOpenAppConfirmation,
+    );
+
     launcherUpdate.forRenderer.registerCheckForUpdate(checkForUpdate);
     launcherUpdate.forRenderer.registerStartUpdate(startUpdate);
     launcherUpdate.forRenderer.registerCancelUpdate(cancelUpdate);
@@ -147,4 +162,12 @@ export default () => {
 
     jlink.forRenderer.registerGetJLinkState(getJLinkState);
     jlink.forRenderer.registerInstallJLink(installJLink);
+
+    auth.forRenderer.registerGetAuthStatus(getAuthStatus);
+    auth.forRenderer.registerStartSignIn(startOauthSignIn);
+    auth.forRenderer.registerCancelSignIn(cancelOauthSignIn);
+    auth.forRenderer.registerSingleSignOut(singleSignOut);
+    auth.forRenderer.registerGetIdToken(getIdTokenSilently);
+    auth.forRenderer.registerGetAccessToken(getAccessTokenSilently);
+    auth.forRenderer.registerGetProfileInfo(getProfileInfo);
 };

@@ -2,7 +2,8 @@
 
 ### Added
 
-- Updating of apps when clicking **Open** (for apps that enable this flow).
+- Sign-in option using myNordic account.
+- Updating of apps when clicking Open (for apps that enable this flow).
 
 ## 5.3.2 - 2026-07-07
 

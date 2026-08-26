@@ -14,6 +14,7 @@ import appleSilicon from './features/appleSilicon/appleSiliconSlice';
 import appDialogs from './features/apps/appDialogsSlice';
 import apps from './features/apps/appsSlice';
 import autoUpdate from './features/autoUpdate/autoUpdateDialogSlice';
+import openAppConfirmation from './features/deepLink/openAppConfirmationSlice';
 import filter from './features/filter/filterSlice';
 import jlinkUpdate from './features/jlinkUpdate/jlinkUpdateSlice';
 import launcherUpdate from './features/launcherUpdate/launcherUpdateSlice';
@@ -41,6 +42,7 @@ export const reducer = {
     sources,
     telemetry,
     autoUpdate,
+    openAppConfirmation,
 };
 
 const store = configureStore({

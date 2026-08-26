@@ -13,6 +13,7 @@ import telemetry from '@nordicsemiconductor/pc-nrfconnect-shared/src/telemetry/t
 import { migrateSourcesJson } from './apps/dataMigration/migrateSourcesJson';
 import { migrateSourcesVersionedJson } from './apps/dataMigration/migrateSourcesVersionedJson';
 import configureElectronApp from './configureElectronApp';
+import { handleDeepLinkFromArgv, registerDeepLinkHandling } from './deepLink';
 import initNrfUtilProxyEnv from './initNrfUtilProxyEnv';
 import registerIpcHandler from './registerIpcHandler';
 import singeInstanceLock from './singeInstanceLock';
@@ -20,11 +21,19 @@ import storeExecutablePath from './storeExecutablePath';
 
 telemetry.enableTelemetry();
 
+// Initialise infrastructure
+registerDeepLinkHandling();
 initNrfUtilProxyEnv();
 singeInstanceLock();
 initializeElectronRemote();
+registerIpcHandler();
+
+// Run migrations
 migrateSourcesJson();
 migrateSourcesVersionedJson();
-registerIpcHandler();
+
+// Start app
+handleDeepLinkFromArgv();
 configureElectronApp();
+
 storeExecutablePath();

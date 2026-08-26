@@ -1,6 +1,6 @@
 {
     "name": "nrfconnect",
-    "version": "5.3.2",
+    "version": "5.4.0",
     "description": "nRF Connect for Desktop",
     "repository": {
         "type": "git",
@@ -10,7 +10,7 @@
     "scripts": {
         "prepare": "husky install",
         "app": "cross-env NODE_OPTIONS=--enable-source-maps electron .",
-        "app:debug": "cross-env NODE_OPTIONS=--enable-source-maps electron --remote-debugging-port=9223 .",
+        "app:debug": "cross-env NODE_OPTIONS=--enable-source-maps electron . --remote-debugging-port=9223",
         "watch:build": "run-p --silent --continue-on-error --print-label watch:build:*",
         "watch:build:main": "tsx scripts/esbuild --watch",
         "watch:build:renderer": "tsx scripts/esbuild-renderer --watch",
@@ -39,6 +39,14 @@
     "build": {
         "appId": "com.nordicsemi.nrfconnect",
         "productName": "nRF Connect for Desktop",
+        "protocols": [
+            {
+                "name": "nRF Connect for Desktop",
+                "schemes": [
+                    "nrfconnectfordesktop"
+                ]
+            }
+        ],
         "asarUnpack": [
             "resources/nrfutil-sandboxes",
             "resources/prefetched/jlink"
@@ -126,6 +134,7 @@
         "xvfb-maybe": "0.2.1"
     },
     "dependencies": {
+        "@azure/msal-node": "^5.3.1",
         "@electron/remote": "^2.1.2",
         "chmodr": "1.2.0",
         "electron-store": "8.1.0",

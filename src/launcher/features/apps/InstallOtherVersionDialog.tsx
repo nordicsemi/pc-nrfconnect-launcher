@@ -11,7 +11,7 @@ import {
 } from '@nordicsemiconductor/pc-nrfconnect-shared';
 import { rsort } from 'semver';
 
-import { type DownloadableApp } from '../../../ipc/apps';
+import { type DownloadableApp, isQuickStartApp } from '../../../ipc/apps';
 import { useLauncherDispatch, useLauncherSelector } from '../../util/hooks';
 import {
     getInstallOtherVersionDialog,
@@ -103,7 +103,8 @@ export default () => {
                 You can install an older version of {appName}, but{' '}
                 {installOtherVersionDialog.isVisible &&
                     'autoUpdate' in installOtherVersionDialog.app &&
-                    installOtherVersionDialog.app.autoUpdate &&
+                    (installOtherVersionDialog.app.autoUpdate ||
+                        isQuickStartApp(installOtherVersionDialog.app)) && // TODO remove isQuickStartApp once we stop forcing QS to be auto-updatable
                     'this turns off the autoupdate feature of this app and'}{' '}
                 only the latest version is supported by Nordic Semiconductor.
             </p>

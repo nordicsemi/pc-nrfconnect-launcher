@@ -24,7 +24,7 @@ import {
     windowSizeLauncherKey,
     type WindowState,
 } from '../common/persistedStore';
-import { LOCAL } from '../common/sources';
+import { LOCAL, type SourceName } from '../common/sources';
 import {
     type AppSpec,
     hasFixedSize,
@@ -38,6 +38,7 @@ import { createWindow } from './browser';
 import bundledJlinkVersion from './bundledJlink';
 import { getBundledResourcePath } from './config';
 import { getAppIcon, getNrfConnectForDesktopIcon } from './icons';
+import { logger } from './log';
 
 let launcherWindow: BrowserWindow | undefined;
 const appWindows: {
@@ -47,10 +48,20 @@ const appWindows: {
 
 export const openLauncherWindow = () => {
     if (launcherWindow) {
+        if (launcherWindow.isMinimized()) {
+            launcherWindow.restore();
+        }
         launcherWindow.show();
-    } else {
-        launcherWindow = createLauncherWindow();
+        launcherWindow.focus();
+        return Promise.resolve(launcherWindow);
     }
+
+    launcherWindow = createLauncherWindow();
+    return new Promise<BrowserWindow>(resolve => {
+        launcherWindow?.webContents.once('did-finish-load', () =>
+            resolve(launcherWindow as BrowserWindow),
+        );
+    });
 };
 
 const keepPositionWithinBounds = ({ x, y, height, width }: WindowState) => {
@@ -254,6 +265,24 @@ export const openApp = (app: AppSpec, openAppOptions?: OpenAppOptions) => {
     }
 };
 
+export const openInstalledApp = (
+    name: string,
+    source: SourceName,
+    args: string[],
+) => {
+    openLauncherWindow();
+    if (source === LOCAL) {
+        const local = getLocalApps(false).find(a => a.name === name);
+        if (local) return openAppWindow(local, args);
+    } else {
+        const app = getDownloadableApps().apps.find(
+            a => a.name === name && a.source === source,
+        );
+        if (app && isInstalled(app)) return openAppWindow(app, args);
+    }
+    logger.warn(`App "${name}" from source "${source}" is not installed`);
+};
+
 export const openDownloadableAppWindow = (appSpec: AppSpec, args: string[]) => {
     const downloadableApp = getDownloadableApps().apps.find(
         app => app.name === appSpec.name && app.source === appSpec.source,
@@ -304,4 +333,18 @@ export const getAppDetails = (webContents: WebContents) => {
         // Remove at some point in the future when all apps are update to at least shared v39
         path: appWindow.app.installed.path,
     };
+};
+
+export const getAllWindowWebContents = (): WebContents[] =>
+    [
+        ...(launcherWindow ? [launcherWindow.webContents] : []),
+        ...appWindows.map(w => w.browserWindow.webContents),
+    ].filter(wc => !wc.isDestroyed());
+
+export const focusWindow = (window: BrowserWindow) => {
+    if (window.isDestroyed()) return;
+    if (window.isMinimized()) window.restore();
+    window.show();
+    window.focus();
+    if (process.platform === 'darwin') electronApp.focus({ steal: true });
 };

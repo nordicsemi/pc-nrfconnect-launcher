@@ -11,7 +11,7 @@ import { type App, inMain, isQuickStartApp } from '../../../ipc/apps';
 import type { AppThunk } from '../../store';
 import { addDownloadableApps } from '../apps/appsSlice';
 
-export const isAutoUpdatingApp = (app?: App): app is InstalledDownloadableApp =>
+const isAutoUpdatingApp = (app?: App): app is InstalledDownloadableApp =>
     app != null &&
     (('autoUpdate' in app && !!app.autoUpdate) ||
         // We want to force people onto the auto updatable quickstart

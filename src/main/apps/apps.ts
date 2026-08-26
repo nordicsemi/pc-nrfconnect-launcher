@@ -211,6 +211,11 @@ export const checkForAppsUpdate = async (apps: InstalledDownloadableApp[]) => {
                 .map(url => [s, url] as [Source, string]),
         );
 
+    const mappedInstalledApps = new Map<string, InstalledDownloadableApp>();
+    apps.forEach(app =>
+        mappedInstalledApps.set(`${app.source}/${app.name}`, app),
+    );
+
     const downloadableApps = (
         await Promise.all(
             appUrls
@@ -223,11 +228,17 @@ export const checkForAppsUpdate = async (apps: InstalledDownloadableApp[]) => {
         )
     )
         .filter(defined)
-        .filter(
-            app =>
-                app.latestVersion !==
-                (app as InstalledDownloadableApp).currentVersion,
-        );
+        .filter(app => {
+            const a = mappedInstalledApps.get(`${app.source}/${app.name}`);
+
+            const shaOfLatest = app.versions?.[app.latestVersion]?.shasum;
+            const shaOfInstalled = a?.installed.shasum;
+
+            return (
+                app.latestVersion !== a?.currentVersion ||
+                shaOfLatest !== shaOfInstalled
+            );
+        });
 
     return addInstalledAppDatas(downloadableApps);
 };
