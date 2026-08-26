@@ -2,6 +2,9 @@ tool:
 - name: nRF Connect for Desktop launcher
   link: true
 sections:
+- name: August 2026
+  entries:
+  - "Added the [myNordic account linking](./overview_cfd.md#mynordic-account-linking) section to the [Overview](./overview_cfd.md) page."
 - name: May 2026
   entries:
   - "Updated the [Supported operating systems](./os_support.md) page: Linux - Ubuntu 24.04 LTS is now Tier 1, Linux - Ubuntu 22.04 LTS is now Tier 2."
