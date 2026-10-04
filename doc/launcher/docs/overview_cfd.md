@@ -14,6 +14,20 @@ The **Apps** tab lists all available applications.
 
 You can use the **Filter** menu to list applications by their [sources](#app-sources) and state.
 
+![Filter menu](./screenshots/cfd_filter_menu.png "Filter menu")
+
+In the **Sources** column, select the app sources whose applications you want to list.
+For more information, see [Selecting an app source](working_with_app_sources.md#selecting-an-app-source).
+
+In the **State** column, select which applications you want to list based on their installation state:
+
+| Option | Description |
+|--------|-------------|
+| **Installed** | Lists the applications that are installed on your machine. |
+| **Downloadable** | Lists the applications that are available in the selected sources, but are not installed on your machine. |
+
+If you select both options, the **Apps** tab lists all applications from the selected sources.
+
 ### Search
 
 Type input into the field to perform a fuzzy live search of the application list.
@@ -50,16 +64,24 @@ For easy access, you can create a desktop shortcut by clicking the arrow-down bu
 
 The **Settings** tab lets you customize how the launcher works and where it pulls information about the apps.
 
+![Settings tab](./screenshots/cfd_settings_cropped.png "Settings tab")
+
 ### Updates
 
 Here you can check for updates to both the launcher and the nRF Connect for Desktop apps you have installed.
 
 ### App sources
 
-Use the **Add source** button to provide URL to a custom list of application.
+Use the **Add source** button to provide the URL to a custom list of applications.
 This can be used for example to share early versions of applications under development.
+You can filter the sources using the [**Filter**](#filter) menu in the **Apps** tab.
 
-For some of these sources, you might need to request an identity token and add it in [Authentication](#authentication).
+![App sources section with an added source](./screenshots/cfd_settings_add_sources_example.png "App sources section with an added source")
+
+For detailed information, see [Working with app sources](working_with_app_sources.md).
+
+!!! note "Note"
+    For some of these sources, you might need to request an identity token and add it in [Authentication](#authentication).
 
 ### myNordic account
 

@@ -35,7 +35,40 @@ Once set, your authentication information will be displayed in the **Authenticat
 ![Token added in the Authentication section](./screenshots/authentication_token.png "Token added in the Authentication section")
 
 !!! info "Tip"
-      Make sure that you also have an [app source](./overview_cfd.md#app-sources) added to see the restricted app versions and [filter them](overview_cfd.md#filter).
+      Make sure to [add an app source](working_with_app_sources.md) to see the restricted app versions and [select them](working_with_app_sources.md#selecting-an-app-source).
+
+### Fixing encryption error
+
+When you set a token, the launcher might reject it with the following error:
+
+![Token rejected with the Encryption not available error](./screenshots/token_encryption_issue_error.png "Token rejected with the Encryption not available error")
+
+This error means that nRF Connect for Desktop cannot access the safe storage of your operating system, so it cannot store the token encrypted.
+This happens, for example, when you denied the access in step 3 of [Setting a token](#setting-a-token) or when your operating system has no supported secret storage available.
+
+To fix this error, complete the following steps:
+
+1. Make sure that the safe storage is available on your operating system:
+
+    - On Linux, install GNOME Keyring and the libsecret libraries by running the following command:
+
+        ```
+        sudo apt install gnome-keyring libsecret-1-0 libsecret-tools
+        ```
+
+    - On macOS, the safe storage is the built-in Keychain, so you do not need to install anything.
+      If your login keychain is locked, unlock it by running the following command:
+
+        ```
+        security unlock-keychain ~/Library/Keychains/login.keychain-db
+        ```
+
+    - On Windows, the safe storage is built into the operating system, so this error is not expected.
+      If it occurs, contact your Nordic Semiconductor representative.
+
+2. Restart nRF Connect for Desktop.
+3. If prompted about using confidential information from safe storage, allow the access.
+4. [Set the token](#setting-a-token) again.
 
 ## Replacing a token
 
@@ -74,4 +107,4 @@ If you encounter errors when accessing restricted app sources, check the followi
 * You have an active internet connection.
 * You have the correct permissions to access the specific resources.
 
-If problems persist, you may need to generate a new token or contact your Nordic Semiconductor representative for assistance.
+If problems persist, generate a new token or contact your Nordic Semiconductor representative for assistance.
