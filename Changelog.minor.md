@@ -11,6 +11,12 @@ release the new version.
 
 ### Changed
 
+- #1330: Update bundled J-Link to V9.82.
+
+## 5.4.0
+
+### Changed
+
 - #1320: Update Electron to v43.
 - #1314: Temporarily force auto-update of the official Quick Start app, to get
   users onto the version with cloud telemetry.
