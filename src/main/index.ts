@@ -19,12 +19,12 @@ import registerIpcHandler from './registerIpcHandler';
 import singeInstanceLock from './singeInstanceLock';
 import storeExecutablePath from './storeExecutablePath';
 
+singeInstanceLock();
 telemetry.enableTelemetry();
 
 // Initialise infrastructure
 registerDeepLinkHandling();
 initNrfUtilProxyEnv();
-singeInstanceLock();
 initializeElectronRemote();
 registerIpcHandler();
 
