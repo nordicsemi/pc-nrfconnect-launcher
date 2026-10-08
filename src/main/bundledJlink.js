@@ -6,4 +6,4 @@
 
 module.exports = process.env.OVERRIDE_JLINK_VERSION
     ? process.env.OVERRIDE_JLINK_VERSION
-    : 'V9.24a';
+    : 'V9.82';
