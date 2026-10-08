@@ -63,3 +63,4 @@ nav:
   - Launcher overview: overview_cfd.md
   - Starting nRF Connect for Desktop with proxy settings: proxy_settings.md
   - Working with identity tokens: working_with_authentications_tokens.md
+  - Working with app sources: working_with_app_sources.md
