@@ -77,7 +77,7 @@ jobs:
                   done
 
             - name: Setup JFrog CLI
-              uses: jfrog/setup-jfrog-cli@deda456d982fc5e9a7a020b63eb0d2968aedd33e # v5
+              uses: jfrog/setup-jfrog-cli@68c0efdc951dd2359bbbfa15c48bc67b3ae8e4d6 # v5
               env:
                   JF_URL: https://files.nordicsemi.com/
                   JF_ACCESS_TOKEN:
