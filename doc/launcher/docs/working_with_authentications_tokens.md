@@ -43,8 +43,8 @@ When you set a token, the launcher might reject it with the following error:
 
 ![Token rejected with the Encryption not available error](./screenshots/token_encryption_issue_error.png "Token rejected with the Encryption not available error")
 
-This error means that nRF Connect for Desktop cannot access the safe storage of your operating system, so it cannot store the token encrypted.
-This happens, for example, when you denied the access in step 3 of [Setting a token](#setting-a-token) or when your operating system has no supported secret storage available.
+This error means that nRF Connect for Desktop cannot access the safe storage of your operating system and encrypt the token.
+This can happens, for example, when you denied the access in step 3 of [Setting a token](#setting-a-token) or when your operating system has no supported secret storage available.
 
 To fix this error, complete the following steps:
 
@@ -64,7 +64,7 @@ To fix this error, complete the following steps:
         ```
 
     - On Windows, the safe storage is built into the operating system, so this error is not expected.
-      If it occurs, contact your Nordic Semiconductor representative.
+      If it occurs, contact your Nordic Semiconductor representative or open a ticket on [DevZone](https://devzone.nordicsemi.com/support/add).
 
 2. Restart nRF Connect for Desktop.
 3. If prompted about using confidential information from safe storage, allow the access.

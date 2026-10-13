@@ -19,19 +19,7 @@ You manage app sources in the **App sources** section of the **Settings** tab.
 ## Adding an app source
 
 Before you start, get the URL of the source's `source.json` file, for example from your Nordic Semiconductor contact.
-The URL must point directly to the `source.json` file and use the following format:
-
-```
-https://files.nordicsemi.com/artifactory/swtools/<access_level>/ncd/apps/<source_name>/source.json
-```
-
-In this format:
-
-- `<access_level>` is the access level of the source, for example `external` for public sources.
-  Sources with other access levels are restricted and require an identity token.
-- `<source_name>` is the name of the source, for example `official`.
-
-If you provide a legacy URL from `developer.nordicsemi.com`, the launcher replaces it with the corresponding URL on `files.nordicsemi.com`.
+The URL must point directly to the `source.json` file.
 
 Complete the following steps:
 

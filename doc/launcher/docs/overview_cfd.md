@@ -73,7 +73,7 @@ Here you can check for updates to both the launcher and the nRF Connect for Desk
 ### App sources
 
 Use the **Add source** button to provide the URL to a custom list of applications.
-This can be used for example to share early versions of applications under development.
+This can be used for example to work with early versions of applications under development.
 You can filter the sources using the [**Filter**](#filter) menu in the **Apps** tab.
 
 ![App sources section with an added source](./screenshots/cfd_settings_add_sources_example.png "App sources section with an added source")
