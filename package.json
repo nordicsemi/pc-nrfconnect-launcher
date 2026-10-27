@@ -138,7 +138,7 @@
         "@electron/remote": "^2.1.2",
         "chmodr": "1.2.0",
         "electron-store": "8.1.0",
-        "electron-updater": "4.3.7",
+        "electron-updater": "^6.8.11",
         "lodash": "^4.17.21",
         "minimist": "^1.2.8",
         "move-file": "^4.1.0",

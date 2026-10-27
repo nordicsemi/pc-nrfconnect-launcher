@@ -4,8 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { type ProgressInfo } from 'builder-util-runtime';
-import { autoUpdater, CancellationToken } from 'electron-updater';
+import {
+    autoUpdater,
+    CancellationToken,
+    type ProgressInfo,
+} from 'electron-updater';
 import { createLogger, transports } from 'winston';
 
 import {
@@ -38,7 +41,7 @@ export const setUseChineseUpdateServer = (useChineseServer: boolean) => {
 };
 
 export const checkForUpdate = async () => {
-    const updateCheckResult = autoUpdater.checkForUpdates();
+    const updateCheckResult = await autoUpdater.checkForUpdates();
     if (!updateCheckResult) {
         logger.warn(
             'Not checking for nRF Connect for Desktop updates. ' +
@@ -47,12 +50,11 @@ export const checkForUpdate = async () => {
         throw new Error('Auto update not supported');
     }
 
-    // checkForUpdatesPromise will resolve with result whether or not update
-    // is available, but the result will contain a cancellationToken and a
-    // downloadPromise only if there is an update
-    const { updateInfo, cancellationToken } = await updateCheckResult;
+    // The result is returned whether or not an update is available;
+    // isUpdateAvailable tells which of the two it is.
+    const { updateInfo, isUpdateAvailable } = updateCheckResult;
     return {
-        isUpdateAvailable: !!cancellationToken,
+        isUpdateAvailable,
         newVersion: updateInfo.version,
     };
 };
