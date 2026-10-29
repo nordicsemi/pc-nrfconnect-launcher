@@ -55,7 +55,7 @@ jobs:
             TAG: ${{ inputs.tag }}
         steps:
             - name: Setup JFrog CLI
-              uses: jfrog/setup-jfrog-cli@deda456d982fc5e9a7a020b63eb0d2968aedd33e # v5
+              uses: jfrog/setup-jfrog-cli@6ed45ef1a24199bd4c94d3fd55a7e8cb7e45985d # v5
               env:
                   JF_URL: https://files.nordicsemi.com/
                   JF_ACCESS_TOKEN:
