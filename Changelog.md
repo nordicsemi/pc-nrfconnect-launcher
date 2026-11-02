@@ -1,3 +1,10 @@
+## 5.4.1 - Unreleased
+
+### Changed
+
+- This release update dependencies to address compromised eMudhra intermediate
+  certificates.
+
 ## 5.4.0 - 2026-08-27
 
 ### Added
