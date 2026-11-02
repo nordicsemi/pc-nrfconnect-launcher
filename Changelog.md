@@ -4,6 +4,7 @@
 
 - This release update dependencies to address compromised eMudhra intermediate
   certificates.
+- Updated bundled SEGGER J-Link to v9.82.
 
 ## 5.4.0 - 2026-08-27
 
