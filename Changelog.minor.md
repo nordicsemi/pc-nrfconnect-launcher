@@ -9,10 +9,6 @@ release the new version.
 
 ## Unreleased
 
-### Changed
-
-- #1330: Update bundled J-Link to V9.82.
-
 ## 5.4.0
 
 ### Changed
