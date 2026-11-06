@@ -23,3 +23,24 @@ const CheckboxFilterEntry: React.FC<{
 );
 
 export default CheckboxFilterEntry;
+
+const NewCheckboxFilterEntry: React.FC<{
+    label: string;
+    checked: boolean;
+    onChange: React.ChangeEventHandler<HTMLInputElement>;
+}> = ({ label, checked, onChange }) => (
+    <div className="tw-mx-4 tw-flex tw-items-center tw-gap-2 tw-py-1 tw-pr-6">
+        <input
+            type="checkbox"
+            id={`cb-${label.toLowerCase()}`}
+            className="tw-m-0 tw-h-4 tw-w-4 tw-shrink-0 checked:tw-accent-nordicBlue-700"
+            checked={checked}
+            onChange={onChange}
+        />
+        <label htmlFor={`cb-${label.toLowerCase()}`} className="tw-m-0">
+            {label}
+        </label>
+    </div>
+);
+
+export { NewCheckboxFilterEntry };

@@ -11,7 +11,9 @@ import { allStandardSourceNames } from '../../../common/sources';
 import { useLauncherDispatch, useLauncherSelector } from '../../util/hooks';
 import Col from '../layout/Col';
 import { getExternalSourcesSorted } from '../sources/sourcesSlice';
-import CheckboxFilterEntry from './CheckboxFilterEntry';
+import CheckboxFilterEntry, {
+    NewCheckboxFilterEntry,
+} from './CheckboxFilterEntry';
 import FilterDropdownHeading from './FilterDropdownHeading';
 import { getHiddenSources, hideSource, showSource } from './filterSlice';
 
@@ -32,7 +34,7 @@ export default () => {
                 const isShown = !hiddenSources.has(sourceName);
 
                 return (
-                    <CheckboxFilterEntry
+                    <NewCheckboxFilterEntry
                         label={
                             allStandardSourceNames.includes(sourceName)
                                 ? capitalize(sourceName)
