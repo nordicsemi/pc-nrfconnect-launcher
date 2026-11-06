@@ -9,6 +9,10 @@ release the new version.
 
 ## Unreleased
 
+### Changed
+
+- #1332: Refactor NameFilter without react-bootstrap. No visual changes.
+
 ## 5.4.0
 
 ### Changed
