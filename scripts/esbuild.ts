@@ -6,13 +6,29 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-4-Clause
  */
 
-import { node as nodeVersion } from '@nordicsemiconductor/pc-nrfconnect-shared/scripts/versions';
+import { versionsForLauncherVersion } from '@nordicsemiconductor/pc-nrfconnect-shared/config/versions';
 import esbuild, { type BuildOptions } from 'esbuild';
 import * as fs from 'node:fs';
 
-import { dependencies } from '../package.json';
+import { dependencies, devDependencies, version } from '../package.json';
 
 const packageJson = fs.readFileSync('package.json', 'utf8');
+
+const versions = versionsForLauncherVersion(version);
+
+if (devDependencies.electron == null) {
+    console.error(
+        `Electron must be a dev dependency now. Run \`npm install --save-dev --save-exact electron@${versions.electron}\` to fix it.`,
+    );
+    process.exit(1);
+}
+
+if (devDependencies.electron !== versions.electron) {
+    console.error(
+        `Wrong version (${devDependencies.electron}) of Electron. Run \`npm install --save-dev --save-exact electron@${versions.electron}\` to fix it.`,
+    );
+    process.exit(1);
+}
 
 const options = {
     bundle: true,
@@ -37,7 +53,7 @@ const options = {
         ),
     },
     minify: process.argv.includes('--prod'),
-    target: [`node${nodeVersion}`],
+    target: [`node${versions.node}`],
 } satisfies BuildOptions;
 
 const build = async () => {

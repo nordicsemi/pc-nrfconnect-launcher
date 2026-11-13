@@ -9,15 +9,17 @@
 import { build } from '@nordicsemiconductor/pc-nrfconnect-shared/scripts/esbuild-renderer';
 import * as fs from 'node:fs';
 
+import { version } from '../package.json';
+
 const packageJson = fs.readFileSync('package.json', 'utf8');
 
-build({
+build(version, {
     entryPoints: ['./resources/css/fonts.scss'],
     outfile: './dist/fonts.css',
     sourcemap: false,
 });
 
-build({
+build(version, {
     entryPoints: ['./src/launcher'],
     outfile: './dist/launcher.js',
     define: {
@@ -30,6 +32,7 @@ build({
 });
 
 build(
+    version,
     {
         entryPoints: ['./src/app'],
         outfile: './dist/app.js',
