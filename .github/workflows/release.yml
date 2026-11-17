@@ -58,3 +58,31 @@ jobs:
             release-type: production
             tag: ${{ needs.check-version.outputs.tag }}
         secrets: inherit
+
+    copy-to-web-assets:
+        name: Copy to web-assets to show the release on nordicsemi.com
+        needs: [check-version, release]
+        runs-on: ubuntu-latest
+        env:
+            TAG: ${{ needs.check-version.outputs.tag }}
+        steps:
+            - name: Setup JFrog CLI
+              uses: jfrog/setup-jfrog-cli@deda456d982fc5e9a7a020b63eb0d2968aedd33e # v5
+              env:
+                  JF_URL: https://files.nordicsemi.com/
+                  JF_ACCESS_TOKEN:
+                      ${{ secrets.COM_NORDICSEMI_FILES_PASSWORD_SWTOOLS_FRONTEND
+                      }}
+
+            - name: Copy to web-assets
+              run: |
+                  jf rt copy --flat "swtools/external/ncd/launcher/$TAG/" web-assets-com_nordicsemi/external/swtools/ncd/launcher/$TAG/
+                  jf rt copy --flat "swtools/external/ncd/launcher/latest*" web-assets-com_nordicsemi/external/swtools/ncd/launcher/
+
+    notify-swtools-app-docs:
+        needs: [check-version, release]
+        uses: nordicsemi/pc-nrfconnect-shared/.github/workflows/notify-swtools-app-docs.yml@main
+        with:
+            project-name: pc-nrfconnect-launcher
+            tag: ${{ needs.check-version.outputs.tag }}
+        secrets: inherit
