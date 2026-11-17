@@ -1,3 +1,17 @@
+## Unreleased
+
+### Changed
+
+- **Breaking change:** Changed the signature for the download on Windows. This
+  has the following consequences depending on your nRF Connect for Desktop
+  version:
+    - If you directly download the latest version or update from 5.3.0 or later,
+      everything will continue to work.
+    - If you are still using nRF Connect for Desktop 5.2.1 or earlier, updating
+      the application through the internal update mechanism will fail. In that
+      case, download nRF Connect for Desktop again from its
+      [official product page](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop/Download#infotabs).
+
 ## 5.4.1 - 2026-11-05
 
 ### Changed
