@@ -8,6 +8,9 @@ on:
             - unlabeled
             - synchronize
 
+permissions:
+    pull-requests: write
+
 jobs:
     check_labels:
         uses: nordicsemi/pc-nrfconnect-shared/.github/workflows/labels.yml@main

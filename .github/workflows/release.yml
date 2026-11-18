@@ -9,8 +9,12 @@ on:
                     Defaults to the ref of the workflow.
                 type: string
 
+permissions: {}
+
 jobs:
     check-version:
+        permissions:
+            contents: read
         name: Check version and existence
         runs-on: ubuntu-latest
         outputs:
@@ -53,6 +57,9 @@ jobs:
         name: Create production release
         needs: check-version
         uses: ./.github/workflows/release-common.yml
+        permissions:
+            contents: write
+            actions: read
         with:
             ref: ${{ inputs.ref }}
             release-type: production

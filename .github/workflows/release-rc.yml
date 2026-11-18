@@ -13,8 +13,12 @@ on:
         branches:
             - main
 
+permissions: {}
+
 jobs:
     check-version:
+        permissions:
+            contents: read
         name: Check version
         runs-on: ubuntu-latest
         outputs:
@@ -53,6 +57,9 @@ jobs:
         needs: check-version
         if: needs.check-version.outputs.should-run == 'true'
         uses: ./.github/workflows/release-common.yml
+        permissions:
+            contents: write
+            actions: read
         with:
             ref: ${{ github.sha }}
             release-type: rc
