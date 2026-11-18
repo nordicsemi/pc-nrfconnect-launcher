@@ -29,8 +29,12 @@ on:
                 type: boolean
                 default: false
 
+permissions: {}
+
 jobs:
     build:
+        permissions:
+            contents: read
         name: Build Windows
         runs-on: windows-latest
         steps:
