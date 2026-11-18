@@ -54,7 +54,9 @@ const expectContained = () => {
 };
 
 beforeEach(() => {
-    root = fs.mkdtempSync(path.join(os.tmpdir(), 'untar-test-'));
+    root = fs.realpathSync(
+        fs.mkdtempSync(path.join(os.tmpdir(), 'untar-test-')),
+    );
     dest = path.join(root, 'dest');
     outside = path.join(root, 'outside');
     archive = path.join(root, 'test.tgz');
@@ -65,8 +67,13 @@ beforeEach(() => {
 
 afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 
+/* Creating symlinks needs elevated rights on Windows, and tar-fs skips hardlinks there. */
+const isWindows = process.platform === 'win32';
+const testUnix = isWindows ? test.skip : test;
+const describeUnix = isWindows ? describe.skip : describe;
+
 /* Symlink escapes: one hop, chains, replacement, dangling links, and overwrites. */
-describe('symlink escapes', () => {
+describeUnix('symlink escapes', () => {
     const cases: [string, () => Entry[]][] = [
         [
             'symlink to ".." with no write through it',
@@ -141,7 +148,7 @@ describe('symlink escapes', () => {
 });
 
 /* Hardlink escapes: targets that are outside, or that reach outside through a symlink. */
-describe('hardlink escapes', () => {
+describeUnix('hardlink escapes', () => {
     const cases: [string, () => Entry[]][] = [
         [
             'hardlink to a symlink that points outside, then overwrite',
@@ -198,42 +205,67 @@ describe('hardlink escapes', () => {
 
 /* Safe archives: proves the same helpers accept safe input and that extraction works. */
 describe('safe archives still extract', () => {
-    test('files, safe symlink, and hardlink are created with correct content', async () => {
+    test('file is created with correct content', async () => {
         await extract([
             { name: 'd', type: 'directory' },
             { name: 'd/f', type: 'file', data: 'hello' },
-            { name: 'in', type: 'symlink', linkname: 'd/f' },
-            { name: 'hl', type: 'link', linkname: 'd/f' },
         ]);
         expect(fs.readFileSync(path.join(dest, 'd/f'), 'utf8')).toBe('hello');
-        expect(fs.readFileSync(path.join(dest, 'hl'), 'utf8')).toBe('hello');
-        expect(fs.readlinkSync(path.join(dest, 'in'))).toBe('d/f');
         expectContained();
     });
 
-    test('strip=1 keeps a package layout and a relative symlink inside dest', async () => {
-        await extract(
-            [
-                { name: 'package/', type: 'directory' },
-                { name: 'package/package.json', type: 'file', data: '{}' },
-                { name: 'package/dist/main.js', type: 'file', data: 'main' },
-                {
-                    name: 'package/dist/link.js',
-                    type: 'symlink',
-                    linkname: 'main.js',
-                },
-                { name: 'top/a.txt', type: 'file', data: 'data' },
-                { name: 'top/b.txt', type: 'link', linkname: 'top/a.txt' },
-            ],
-            1,
-        );
-        expect(fs.readFileSync(path.join(dest, 'package.json'), 'utf8')).toBe(
-            '{}',
-        );
-        expect(fs.readFileSync(path.join(dest, 'dist/link.js'), 'utf8')).toBe(
-            'main',
-        );
-        expect(fs.readFileSync(path.join(dest, 'b.txt'), 'utf8')).toBe('data');
-        expectContained();
-    });
+    testUnix(
+        'files, safe symlink, and hardlink are created with correct content',
+        async () => {
+            await extract([
+                { name: 'd', type: 'directory' },
+                { name: 'd/f', type: 'file', data: 'hello' },
+                { name: 'in', type: 'symlink', linkname: 'd/f' },
+                { name: 'hl', type: 'link', linkname: 'd/f' },
+            ]);
+            expect(fs.readFileSync(path.join(dest, 'd/f'), 'utf8')).toBe(
+                'hello',
+            );
+            expect(fs.readFileSync(path.join(dest, 'hl'), 'utf8')).toBe(
+                'hello',
+            );
+            expect(fs.readlinkSync(path.join(dest, 'in'))).toBe('d/f');
+            expectContained();
+        },
+    );
+
+    testUnix(
+        'strip=1 keeps a package layout and a relative symlink inside dest',
+        async () => {
+            await extract(
+                [
+                    { name: 'package/', type: 'directory' },
+                    { name: 'package/package.json', type: 'file', data: '{}' },
+                    {
+                        name: 'package/dist/main.js',
+                        type: 'file',
+                        data: 'main',
+                    },
+                    {
+                        name: 'package/dist/link.js',
+                        type: 'symlink',
+                        linkname: 'main.js',
+                    },
+                    { name: 'top/a.txt', type: 'file', data: 'data' },
+                    { name: 'top/b.txt', type: 'link', linkname: 'top/a.txt' },
+                ],
+                1,
+            );
+            expect(
+                fs.readFileSync(path.join(dest, 'package.json'), 'utf8'),
+            ).toBe('{}');
+            expect(
+                fs.readFileSync(path.join(dest, 'dist/link.js'), 'utf8'),
+            ).toBe('main');
+            expect(fs.readFileSync(path.join(dest, 'b.txt'), 'utf8')).toBe(
+                'data',
+            );
+            expectContained();
+        },
+    );
 });
