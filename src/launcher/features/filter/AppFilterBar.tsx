@@ -33,7 +33,7 @@ const FilterDropdown = () => {
 };
 
 export default () => (
-    <div className="filterbox tw-inline-flex tw-w-full">
+    <div className="filterbox tw-inline-flex tw-w-full tw-gap-3">
         <FilterDropdown />
         <NameFilter />
         <div className="tw-flex-auto" />

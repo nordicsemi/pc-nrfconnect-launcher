@@ -13,6 +13,7 @@ release the new version.
 
 - #1338: Update `tar-fs` and `electron-updater`.
 - #1330: Update bundled J-Link to V9.82.
+- #1332: Refactor NameFilter without react-bootstrap. No visual changes.
 
 ### Fixed
 

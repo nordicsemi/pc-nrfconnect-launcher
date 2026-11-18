@@ -2,6 +2,10 @@ tool:
 - name: nRF Connect for Desktop launcher
   link: true
 sections:
+- name: October 2026
+  entries:
+  - "Added the [Working with app sources](./working_with_app_sources.md) page."
+  - "Added the [Fixing encryption error](./working_with_authentications_tokens.md#fixing-encryption-error) section to the [Working with identity tokens](./working_with_authentications_tokens.md) page."
 - name: August 2026
   entries:
   - "Added the [myNordic account](./overview_cfd.md#mynordic-account) section to the [Overview](./overview_cfd.md) page."
