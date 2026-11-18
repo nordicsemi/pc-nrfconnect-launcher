@@ -124,7 +124,7 @@
         "@types/minimist": "^1.2.2",
         "@types/mustache": "4.2.1",
         "@types/node": "^18.18.4",
-        "@types/targz": "1.0.1",
+        "@types/tar-fs": "^2.0.4",
         "asar": "3.0.3",
         "cli-truncate": "2.1.0",
         "cross-env": "7.0.3",
@@ -138,7 +138,7 @@
         "@electron/remote": "^2.1.2",
         "chmodr": "1.2.0",
         "electron-store": "8.1.0",
-        "electron-updater": "4.3.7",
+        "electron-updater": "^6.8.11",
         "lodash": "^4.17.21",
         "minimist": "^1.2.8",
         "move-file": "^4.1.0",
@@ -149,7 +149,7 @@
         "shasum": "1.0.2",
         "short-uuid": "4.2.0",
         "sudo-prompt": "^9.2.1",
-        "targz": "1.0.1",
+        "tar-fs": "^3.1.3",
         "winston": "3.8.1"
     },
     "prettier": "@nordicsemiconductor/pc-nrfconnect-shared/config/prettier.config.js"

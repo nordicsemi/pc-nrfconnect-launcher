@@ -7,10 +7,13 @@
 import chmodr from 'chmodr';
 import fs from 'fs';
 import path from 'path';
-import targz from 'targz';
+import { pipeline } from 'stream/promises';
+import { extract, type Headers } from 'tar-fs';
+import { createGunzip } from 'zlib';
 import { type z } from 'zod';
 
 import describeError from './describeError';
+import { logger } from './log';
 
 export const ifExists = (filePath: string) =>
     fs.existsSync(filePath) ? filePath : undefined;
@@ -93,33 +96,49 @@ export const copy = (src: string, dest: string) => {
     }
 };
 
-export const untar = (src: string, dest: string, stripComponents: number) => {
-    const pattern = new RegExp(`(.*?/){${stripComponents}}`);
-    return new Promise<void>((resolve, reject) => {
-        targz.decompress(
-            {
-                src,
-                dest,
-                tar: {
-                    map: header => ({
-                        ...header,
-                        name: header.name.replace(pattern, ''),
-                    }),
-                },
+type TarHeader = Headers & { linkname?: string | null };
+
+const isUnsafeReason = (p?: string | null) => {
+    if (!p) return null;
+    if (path.posix.isAbsolute(p)) return 'is absolute posix path';
+    if (path.win32.isAbsolute(p) || /^[a-zA-Z]:/.test(p))
+        return 'is absolute Windows path';
+    if (p.split(/[\\/]/).includes('..')) return 'contains path traversal';
+    if (p.includes('\0')) return 'NUL byte in path';
+    return null;
+};
+
+export const untar = async (
+    src: string,
+    dest: string,
+    stripComponents: number,
+) => {
+    const problems: string[] = [];
+    try {
+        const extraction = extract(dest, {
+            strip: stripComponents,
+            map: (header: TarHeader) => {
+                [header.name, header.linkname]
+                    .map(p => ({ p, reason: isUnsafeReason(p) }))
+                    .filter(({ reason }) => reason !== null)
+                    .map(({ p, reason }) => `${p}: ${reason}`)
+                    .forEach(p => {
+                        problems.push(p);
+                    });
+
+                return header;
             },
-            error => {
-                if (error) {
-                    reject(
-                        new Error(
-                            `Unable to extract ${src}: ${describeError(error)}`,
-                        ),
-                    );
-                } else {
-                    resolve();
-                }
-            },
+        });
+
+        await pipeline(fs.createReadStream(src), createGunzip(), extraction);
+    } catch (e) {
+        throw new Error(`Unable to extract ${src}: ${describeError(e)}`);
+    }
+    if (problems.length > 0)
+        logger.warn(
+            `Possibly unsafe archive entries:\n${problems.join('\n\t')}`,
         );
-    });
+    else logger.info('No unsafe archive entries found');
 };
 
 const defaultMode =
@@ -139,9 +158,7 @@ export const chmodDir = (src: string, mode: fs.Mode = defaultMode) =>
             if (error) {
                 reject(
                     new Error(
-                        `Unable to change mode to ${src}: ${describeError(
-                            error,
-                        )}`,
+                        `Unable to change mode to ${src}: ${describeError(error)}`,
                     ),
                 );
             } else {
