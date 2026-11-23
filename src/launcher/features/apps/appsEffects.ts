@@ -150,14 +150,14 @@ const install =
         version?: string,
         showErrorDialog = true,
     ): AppThunk<Promise<DownloadableApp | undefined>> =>
-    dispatch => {
+    async dispatch => {
         try {
             setAutoUpdateEnabled(
                 app.name,
                 app.source,
                 !version || version === app.latestVersion,
             );
-            return appsInMain.installDownloadableApp(app, version);
+            return await appsInMain.installDownloadableApp(app, version);
         } catch (error) {
             dispatch(resetAppInstallProgress(app));
             if (showErrorDialog) {
@@ -168,7 +168,7 @@ const install =
                         cleanIpcErrorMessage(describeError(error)),
                     ),
                 );
-                return Promise.resolve(undefined);
+                return undefined;
             }
             throw cleanIpcErrorMessage(describeError(error));
         }
