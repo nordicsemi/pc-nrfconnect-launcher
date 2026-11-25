@@ -13,12 +13,33 @@ import { getNrfConnectForDesktopIcon } from '../icons';
 import { logger } from '../log';
 
 const desktopFileName = 'nrfconnect-deeplink.desktop';
+const iconFileName = 'nrfconnect.png';
 
-const applicationsDir = () =>
-    path.join(
-        process.env.XDG_DATA_HOME ?? path.join(os.homedir(), '.local/share'),
-        'applications',
-    );
+const dataHomeDir = () =>
+    process.env.XDG_DATA_HOME ?? path.join(os.homedir(), '.local/share');
+
+const applicationsDir = () => path.join(dataHomeDir(), 'applications');
+
+/*
+ * The bundled icon is stored inside `app.asar`. Only Electron's patched `fs`
+ * module can read from an asar archive, but the `Icon=` key of a desktop entry
+ * is resolved by the desktop environment, not by Electron. When running from an
+ * AppImage the icon additionally lives in the ephemeral `/tmp/.mount_*`
+ * directory, which disappears as soon as the app exits. So copy the icon to the
+ * user's data directory and reference that copy from the desktop entry.
+ */
+const installIcon = () => {
+    const iconPath = path.join(dataHomeDir(), 'nrfconnect', iconFileName);
+
+    try {
+        fs.mkdirSync(path.dirname(iconPath), { recursive: true });
+        fs.copyFileSync(getNrfConnectForDesktopIcon(), iconPath);
+        return iconPath;
+    } catch (error) {
+        logger.warn(`Failed to install icon: ${error}`);
+        return getNrfConnectForDesktopIcon();
+    }
+};
 
 // The Exec key follows the quoting rules of the Desktop Entry Specification,
 // not shell quoting: https://specifications.freedesktop.org/desktop-entry-spec
@@ -56,7 +77,7 @@ export const registerLinuxAppImageProtocolClient = async (scheme: string) => {
         // chrome-sandbox needs to be owned by root with the setuid bit set,
         // which an unprivileged AppImage extraction/mount can never provide.
         `Exec="${escapeExecValue(appImagePath)}" --no-sandbox %u`,
-        `Icon=${getNrfConnectForDesktopIcon()}`,
+        `Icon=${installIcon()}`,
         'Type=Application',
         'Terminal=false',
         `MimeType=x-scheme-handler/${scheme};`,
