@@ -118,13 +118,10 @@ export const untar = async (
         const extraction = extract(dest, {
             strip: stripComponents,
             map: (header: TarHeader) => {
-                [header.name, header.linkname]
-                    .map(p => ({ p, reason: isUnsafeReason(p) }))
-                    .filter(({ reason }) => reason !== null)
-                    .map(({ p, reason }) => `${p}: ${reason}`)
-                    .forEach(p => {
-                        problems.push(p);
-                    });
+                [header.name, header.linkname].forEach(p => {
+                    const reason = isUnsafeReason(p);
+                    if (reason != null) problems.push(`${p}: ${reason}`);
+                });
 
                 return header;
             },
