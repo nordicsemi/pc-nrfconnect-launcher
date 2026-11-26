@@ -5,11 +5,11 @@
  */
 
 import chmodr from 'chmodr';
-import fs from 'fs';
-import path from 'path';
-import { pipeline } from 'stream/promises';
+import fs from 'node:fs';
+import path from 'node:path';
+import { pipeline } from 'node:stream/promises';
+import { createGunzip } from 'node:zlib';
 import { extract, type Headers } from 'tar-fs';
-import { createGunzip } from 'zlib';
 import { type z } from 'zod';
 
 import describeError from './describeError';

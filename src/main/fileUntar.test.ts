@@ -5,12 +5,12 @@
  */
 
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import { pipeline } from 'stream/promises';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { pipeline } from 'node:stream/promises';
+import { createGzip } from 'node:zlib';
 import tarStream, { type Header } from 'tar-stream';
-import { createGzip } from 'zlib';
 
 import { untar } from './fileUtil';
 
