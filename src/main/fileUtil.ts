@@ -98,7 +98,7 @@ export const copy = (src: string, dest: string) => {
 
 type TarHeader = Headers & { linkname?: string | null };
 
-const isUnsafeReason = (p?: string | null) => {
+const isUnsafeReason = (p?: string | null): string | null => {
     if (!p) return null;
     if (path.posix.isAbsolute(p)) return 'is absolute posix path';
     if (path.win32.isAbsolute(p) || /^[a-zA-Z]:/.test(p))
@@ -135,7 +135,7 @@ export const untar = async (
         logger.warn(
             `Possibly unsafe archive entries:\n${problems.join('\n\t')}`,
         );
-    else logger.info('No unsafe archive entries found');
+    else logger.debug('No unsafe archive entries found');
 };
 
 const defaultMode =
