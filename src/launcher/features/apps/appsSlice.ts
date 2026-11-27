@@ -59,6 +59,7 @@ export type State = {
     downloadableApps: DownloadableAppWithProgress[];
     lastUpdateCheckDate?: Date;
     isDownloadingLatestAppInfo: boolean;
+    haveDownloadableAppsLoaded: boolean;
 };
 
 const initialState: State = {
@@ -66,6 +67,7 @@ const initialState: State = {
     downloadableApps: [],
     lastUpdateCheckDate: getLastUpdateCheckDate(),
     isDownloadingLatestAppInfo: false,
+    haveDownloadableAppsLoaded: false,
 };
 
 const equalsSpec = (specOfSoughtApp: AppSpec) => (app: App) =>
@@ -137,6 +139,9 @@ const slice = createSlice({
         },
 
         // Downloadable apps
+        downloadableAppsLoaded(state) {
+            state.haveDownloadableAppsLoaded = true;
+        },
         addDownloadableApps(
             state,
             { payload: apps }: PayloadAction<DownloadableApp[]>,
@@ -272,6 +277,7 @@ export default slice.reducer;
 export const {
     addDownloadableApps,
     addLocalApp,
+    downloadableAppsLoaded,
     initialiseAppInstallProgress,
     installDownloadableAppStarted,
     removeAppsOfSource,
@@ -296,6 +302,9 @@ export const getAllApps = (state: RootState): DisplayedApp[] => {
 export const getNoAppsExist = (state: RootState) =>
     state.apps.localApps.length === 0 &&
     state.apps.downloadableApps.length === 0;
+
+export const getHaveDownloadableAppsLoaded = (state: RootState) =>
+    state.apps.haveDownloadableAppsLoaded;
 
 export const getDownloadableApp =
     ({ source, name }: { name?: string; source?: SourceName }) =>

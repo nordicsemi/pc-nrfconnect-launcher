@@ -19,7 +19,11 @@ import { inMain as artifactoryToken } from '../../../ipc/artifactoryToken';
 import { inMain as sources } from '../../../ipc/sources';
 import type { AppThunk } from '../../store';
 import { handleAppsWithErrors } from '../apps/appsEffects';
-import { addDownloadableApps, setAllLocalApps } from '../apps/appsSlice';
+import {
+    addDownloadableApps,
+    downloadableAppsLoaded,
+    setAllLocalApps,
+} from '../apps/appsSlice';
 import { checkForJLinkUpdate } from '../jlinkUpdate/jlinkUpdateEffects';
 import {
     getArtifactoryTokenInformation,
@@ -80,6 +84,8 @@ export const loadApps: ProcessStep = async dispatch => {
         dispatch(handleSourcesWithErrors(sourcesWithErrors));
     } catch (error) {
         dispatch(ErrorDialogActions.showDialog(describeError(error)));
+    } finally {
+        dispatch(downloadableAppsLoaded());
     }
 };
 
