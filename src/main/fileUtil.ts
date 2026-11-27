@@ -5,11 +5,11 @@
  */
 
 import chmodr from 'chmodr';
-import fs from 'fs';
-import path from 'path';
-import { pipeline } from 'stream/promises';
+import fs from 'node:fs';
+import path from 'node:path';
+import { pipeline } from 'node:stream/promises';
+import { createGunzip } from 'node:zlib';
 import { extract, type Headers } from 'tar-fs';
-import { createGunzip } from 'zlib';
 import { type z } from 'zod';
 
 import describeError from './describeError';
@@ -118,13 +118,10 @@ export const untar = async (
         const extraction = extract(dest, {
             strip: stripComponents,
             map: (header: TarHeader) => {
-                [header.name, header.linkname]
-                    .map(p => ({ p, reason: isUnsafeReason(p) }))
-                    .filter(({ reason }) => reason !== null)
-                    .map(({ p, reason }) => `${p}: ${reason}`)
-                    .forEach(p => {
-                        problems.push(p);
-                    });
+                [header.name, header.linkname].forEach(p => {
+                    const reason = isUnsafeReason(p);
+                    if (reason != null) problems.push(`${p}: ${reason}`);
+                });
 
                 return header;
             },
