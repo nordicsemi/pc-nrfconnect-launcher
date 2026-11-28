@@ -12,6 +12,11 @@
       case, download nRF Connect for Desktop again from its
       [official product page](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop/Download#infotabs).
 
+### Fixed
+
+- Broken icon of the launcher in the Linux desktop environment when running
+  from an AppImage.
+
 ## 5.4.1 - 2026-11-05
 
 ### Changed
